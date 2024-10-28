@@ -8,7 +8,7 @@ export const login = async (correo_electronico, contrasena) => {
       contrasena,      
     });
     const { token } = response.data;
-    localStorage.setItem('token', token); // Almacenar el token en localStorage
+    sessionStorage.setItem('token', token); // Almacenar el token en localStorage
     return token;
   } catch (error) {
     console.log(correo_electronico)

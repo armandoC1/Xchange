@@ -12,7 +12,7 @@ function withAuth<P extends JSX.IntrinsicAttributes>(
 
     useEffect(() => {
       // Verificamos si el token existe en localStorage
-      const token = localStorage.getItem('token');
+      const token = sessionStorage.getItem('token');
       if (!token) {
         // Si no existe, redirigimos al usuario al login
         router.replace('/login');

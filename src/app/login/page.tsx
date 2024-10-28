@@ -44,7 +44,7 @@ export default function Login() {
         // Si la respuesta es exitosa, intenta parsear el JSON
         try {
           const data = JSON.parse(responseText);
-          localStorage.setItem('token', data.token);
+          sessionStorage.setItem('token', data.token);
           alert('Inicio de sesión exitoso.');
           router.push('/');
         } catch (parseError) {
