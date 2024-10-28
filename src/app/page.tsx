@@ -11,6 +11,7 @@ export default function HomePage() {
     const token = localStorage.getItem('token');
 
     if (!token) {
+      alert('Debes iniciar sesion para acceder')
       router.replace('/login');
     }
   }, [router]);

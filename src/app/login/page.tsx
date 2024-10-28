@@ -4,15 +4,15 @@
 import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 
-interface Credentials {
-  correo_electronico: string;
+type Credentials = {
+  correo: string;
   contrasena: string;
 }
 
 export default function Login() {
   const router = useRouter();
   const [credentials, setCredentials] = useState<Credentials>({
-    correo_electronico: '',
+    correo: '',
     contrasena: '',
   });
 
@@ -22,6 +22,7 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    console.log('Datos que se enviarán:', credentials)
     try {
       const res = await fetch('http://localhost:8080/usuarios/login', {
         method: 'POST',
@@ -64,10 +65,10 @@ export default function Login() {
   return (
     <form onSubmit={handleSubmit}>
       <input
-        name="correo_electronico"
+        name="correo"
         type="email"
         placeholder="Correo electrónico"
-        value={credentials.correo_electronico}
+        value={credentials.correo}
         onChange={handleChange}
         required
       />

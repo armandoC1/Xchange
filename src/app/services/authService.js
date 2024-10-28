@@ -4,13 +4,14 @@ import axiosInstance from './axiosInstance';
 export const login = async (correo_electronico, contrasena) => {
   try {
     const response = await axiosInstance.post('/usuarios/login', {
-      correo_electronico, // Cambio para que coincida con el nombre del campo en la tabla
-      contrasena,          // Cambio para que coincida con el nombre del campo en la tabla
+      correo_electronico,
+      contrasena,      
     });
     const { token } = response.data;
     localStorage.setItem('token', token); // Almacenar el token en localStorage
     return token;
   } catch (error) {
+    console.log(correo_electronico)
     console.error('Error en inicio de sesión:', error);
     throw error;
   }
@@ -23,11 +24,11 @@ export const register = async (usuarioData) => {
       correo_electronico: usuarioData.correo_electronico,
       contrasena: usuarioData.contrasena,
       nombre_usuario: usuarioData.nombre_usuario,
-      estado: usuarioData.estado,  // Si necesitas incluir el estado por defecto
+      estado: usuarioData.estado,  
       ubicacion: usuarioData.ubicacion,
-      numero_telefono: usuarioData.numero_telefono, // Incluye todos los campos relevantes
-      foto_perfil: usuarioData.foto_perfil,  // Asumiendo que es una URL o base64
-      rol_id: usuarioData.rol_id,  // Rol del usuario (1 para user, 2 para admin)
+      numero_telefono: usuarioData.numero_telefono, 
+      foto_perfil: usuarioData.foto_perfil,  
+      rol_id: usuarioData.rol_id, 
     });
     return response.data;
   } catch (error) {
