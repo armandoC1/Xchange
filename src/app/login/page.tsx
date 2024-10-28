@@ -81,6 +81,7 @@ export default function Login() {
         required
       />
       <button type="submit">Iniciar Sesión</button>
+      <a href="/registro">Aun no tienes cuenta? Registrate</a>
     </form>
   );
 }
