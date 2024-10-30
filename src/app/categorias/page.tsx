@@ -47,31 +47,16 @@ const Categorias = () => {
             <FormularioCategoria onCategoriaCreada={handleCategoriaCreada} />
             {error && <p>{error}</p>}
             <ul>
-                {categorias.map((categoria: Categoria) => (
-                    <li key={categoria.idCategoria}> {/* Aquí debes asegurarte de que el `key` sea único */}
+                {categorias.map((categoria: Categoria, index: number) => (
+                    <li key={`${categoria.idCategoria}-${index}`}>
                         {categoria.nombre}
                         <button onClick={() => handleEliminar(categoria.idCategoria)}>Eliminar</button>
                     </li>
                 ))}
             </ul>
         </div>
+
     );
     
-    // return (
-    //     <div>
-    //         <h1>Listado de Categorías</h1>
-    //         <FormularioCategoria onCategoriaCreada={handleCategoriaCreada} />
-    //         {error && <p>{error}</p>}
-    //         <ul>
-    //             {categorias.map((categoria: Categoria) => (
-    //                 <li key={categoria.idCategoria}>
-    //                     {categoria.nombre}
-    //                     <button onClick={() => handleEliminar(categoria.idCategoria)}>Eliminar</button>
-    //                 </li>
-    //             ))}
-    //         </ul>
-    //     </div>
-    // );
 };
-
 export default Categorias;
