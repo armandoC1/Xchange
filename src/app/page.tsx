@@ -3,6 +3,7 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 export default function HomePage() {
   const router = useRouter();
@@ -20,6 +21,9 @@ export default function HomePage() {
     <div>
       <h1>Bienvenido a la página de inicio</h1>
       {/* Aquí puedes agregar más contenido o componentes */}
+      <Link href="/categorias">
+        Ir a Categorías
+      </Link>
     </div>
   );
 }
