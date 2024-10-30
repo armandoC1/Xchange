@@ -23,3 +23,5 @@ function withAuth<P extends JSX.IntrinsicAttributes>(
 }
 
 export default withAuth;
+
+
