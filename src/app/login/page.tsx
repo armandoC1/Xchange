@@ -32,7 +32,6 @@ export default function Login() {
         body: JSON.stringify(credentials),
       });
 
-      // Agrega registros detallados de la respuesta
       console.log('Estado de la respuesta:', res.status, res.statusText);
       const contentType = res.headers.get('Content-Type');
       console.log('Content-Type de la respuesta:', contentType);
@@ -41,10 +40,9 @@ export default function Login() {
       console.log('Cuerpo de la respuesta:', responseText);
 
       if (res.ok) {
-        // Si la respuesta es exitosa, intenta parsear el JSON
         try {
           const data = JSON.parse(responseText);
-          localStorage.setItem('token', data.token);
+          sessionStorage.setItem('token', data.token);
           alert('Inicio de sesión exitoso.');
           router.push('/');
         } catch (parseError) {
@@ -52,7 +50,6 @@ export default function Login() {
           alert('Error al procesar la respuesta del servidor.');
         }
       } else {
-        // Si la respuesta no es exitosa, muestra el código y el mensaje de error
         console.error(`Error ${res.status}: ${res.statusText}`);
         alert(`Error ${res.status}: ${res.statusText}`);
       }

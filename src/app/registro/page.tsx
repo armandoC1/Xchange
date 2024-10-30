@@ -23,10 +23,9 @@ export default function Registro() {
     numeroTelefono: '',
     ubicacion: '',
     idRol: 1,
-    fotoPerfil: null, // Inicializa fotoPerfil como null
+    fotoPerfil: null,
   });
 
-  // Manejador para campos de texto y select
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({
@@ -35,7 +34,6 @@ export default function Registro() {
     });
   };
 
-  // Manejador específico para el archivo fotoPerfil
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -46,10 +44,8 @@ export default function Registro() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    // Convertir a FormData para enviar el archivo y los datos JSON
     const formDataToSend = new FormData();
 
-    // Agrega los datos JSON como una parte de la solicitud
     const usuarioData = {
       nombre: formData.nombre,
       correo: formData.correo,
@@ -61,7 +57,6 @@ export default function Registro() {
 
     formDataToSend.append('usuario', new Blob([JSON.stringify(usuarioData)], { type: 'application/json' }));
 
-    // Agrega el archivo, si está presente
     if (formData.fotoPerfil) {
       formDataToSend.append('fotoPerfil', formData.fotoPerfil);
     }
@@ -76,7 +71,7 @@ export default function Registro() {
         alert('Registro exitoso. Redirigiendo al inicio de sesión.');
         router.push('/login');
       } else {
-        const errorData = await res.text(); // Usa text() en lugar de json() para evitar el error de JSON vacío
+        const errorData = await res.text();
         alert(`Error: ${errorData}`);
       }
     } catch (error) {
