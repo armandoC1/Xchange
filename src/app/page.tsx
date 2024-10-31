@@ -16,6 +16,7 @@ export default function HomePage() {
       router.replace('/login')
     }
   }, [router])
+  
 
   return (
     <div className="min-h-screen flex flex-col">
