@@ -4,17 +4,19 @@ import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { eliminarCategoria } from '@/app/services/categoriaService';
 
+interface Categoria {
+    idCategoria: number;
+    nombre: string;
+}
 const EliminarCategoria = () => {
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
 
-    console.log("ID recibido en EliminarCategoria:", id); // Verificar el ID
-
     useEffect(() => {
-        const eliminarCategoriaPorId = async () => {
-            if (id) {
+        if (id) {
+            const eliminarCategoriaPorId = async () => {
                 try {
                     console.log("Intentando eliminar categoría con ID:", id);
                     await eliminarCategoria(Number(id));
@@ -24,12 +26,12 @@ const EliminarCategoria = () => {
                     console.error("Error eliminando categoría:", error);
                     setError("Error eliminando la categoría. Asegúrate de tener permisos y que el ID es correcto.");
                 }
-            } else {
-                setError("ID de categoría inválido o no encontrado en la URL");
-            }
-        };
-
-        eliminarCategoriaPorId();
+            };
+            eliminarCategoriaPorId();
+        } else {
+            console.error("ID de categoría inválido o no encontrado en la URL");
+            setError("ID de categoría inválido o no encontrado en la URL");
+        }
     }, [id, router]);
 
     return (

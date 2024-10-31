@@ -39,12 +39,22 @@ const Categorias = () => {
             {error && <p>{error}</p>}
             <ul>
                 {categorias.map((categoria: Categoria, index: number) => (
+                    
                     <li key={`${categoria.idCategoria}-${index}`}>
-                        {categoria.nombre} 
-                        
-                        <button onClick={() => router.push(`/categorias/eliminar-categoria?id=${categoria.idCategoria}`)}>
+                        {categoria.nombre}
+
+                        <button onClick={() => {
+                            if (categoria.idCategoria) {
+                                console.log(`Redirigiendo a eliminar categoría con ID: ${categoria.idCategoria}`);
+                                router.push(`/categorias/eliminar-categoria?id=${categoria.idCategoria}`);
+                            } else {
+                                console.error("ID de categoría está undefined");
+                                alert("Error: ID de categoría no encontrado.");
+                            }
+                        }}>
                             Eliminar
                         </button>
+
 
 
                     </li>
