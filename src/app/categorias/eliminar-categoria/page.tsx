@@ -13,13 +13,15 @@ const EliminarCategoria = () => {
     const router = useRouter();
     const searchParams = useSearchParams();
     const id = searchParams.get("id");
+    console.log("ID recibido en EliminarCategoria:", id);
+    const numericId = id ? Number(id) : null;
 
     useEffect(() => {
-        if (id) {
+        if (numericId) {
             const eliminarCategoriaPorId = async () => {
                 try {
-                    console.log("Intentando eliminar categoría con ID:", id);
-                    await eliminarCategoria(Number(id));
+                    console.log("Intentando eliminar categoría con ID:", numericId);
+                    await eliminarCategoria(numericId);
                     alert("Categoría eliminada con éxito");
                     router.push("/categorias");
                 } catch (error) {
@@ -32,7 +34,8 @@ const EliminarCategoria = () => {
             console.error("ID de categoría inválido o no encontrado en la URL");
             setError("ID de categoría inválido o no encontrado en la URL");
         }
-    }, [id, router]);
+    }, [numericId, router]);
+
 
     return (
         <div>
