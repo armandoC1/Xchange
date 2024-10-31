@@ -20,50 +20,7 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Navigation */}
-      <nav className="border-b bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="text-xl font-bold text-gray-900">
-                XChange
-              </Link>
-            </div>
-            <div className="hidden sm:flex sm:items-center sm:space-x-8">
-              <Link
-                href="/"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-              >
-                Inicio
-              </Link>
-              <Link
-                href="/ofertas"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-              >
-                Ofertas
-              </Link>
-              <Link
-                href="/categorias"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-              >
-                Categorías
-              </Link>
-              <Link
-                href="/usuarios"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-              >
-                Usuarios
-              </Link>
-              <Link
-                href="/resenas"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
-              >
-                Reseñas
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+
 
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600">
@@ -126,15 +83,6 @@ export default function HomePage() {
           </div>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="mt-auto bg-gray-800 border-t">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-white text-sm">
-            © 2024 XChange. Todos los derechos reservados.
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }
