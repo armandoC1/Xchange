@@ -36,7 +36,10 @@ export const guardarOferta = async (ofertaData) => {
 
 export const obtenerPorId = async (idOferta) => {
     try {
-        const response = await axiosInstance.get(`/findById/${idOferta}`);
+        const token = sessionStorage.getItem('token');
+
+        const response = await axiosInstance.get(`/ofertas/findById/${idOferta}`);
+        
         return response.data;
     } catch (error) {
         if (error.response && error.response.status === 404) {
@@ -47,7 +50,7 @@ export const obtenerPorId = async (idOferta) => {
             throw error; 
         }
     }
-}
+};
 
 export const editarOferta = async (ofertaData, idOferta) => {
     try {

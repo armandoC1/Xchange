@@ -2,15 +2,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { listadoPaginado } from '../services/ofertasService';
 
 interface Oferta {
-    id: number;
+    idOferta: number;
     titulo: string;
     descripcion: string;
     condicion: string;
     ubicacion: string;
-    imagenes: string[]; 
+    imagenes: string[];
     idCategoria: number;
     idUsuario: number;
 }
@@ -23,8 +25,8 @@ export default function OfertasPage() {
     useEffect(() => {
         const fetchOfertas = async () => {
             try {
-                const data = await listadoPaginado(page, limit);
-                setOfertas(data); 
+                const response = await listadoPaginado(page, limit);
+                setOfertas(response.content);
             } catch (error) {
                 console.error('Error al cargar las ofertas:', error);
             }
@@ -40,39 +42,34 @@ export default function OfertasPage() {
         <div>
             <h1>Ofertas</h1>
             {ofertas.length > 0 ? (
-                <ul>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
                     {ofertas.map(oferta => (
-                        <li key={oferta.id}>
+                        <div key={oferta.idOferta} style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
                             <h2>{oferta.titulo}</h2>
                             <p>{oferta.descripcion}</p>
-                            <p>Condición: {oferta.condicion}</p>
-                            <p>Ubicación: {oferta.ubicacion}</p>
                             {oferta.imagenes && oferta.imagenes.length > 0 && (
-                                <div>
-                                    <h3>Imágenes:</h3>
-                                    <div style={{ display: 'flex', gap: '10px' }}>
-                                        {oferta.imagenes.map((imagenBase64, index) => (
-                                            <img 
-                                                key={index} 
-                                                src={`data:image/jpeg;base64,${imagenBase64}`} 
-                                                alt={`Imagen de ${oferta.titulo}`} 
-                                                style={{ width: '100px', height: 'auto' }} 
-                                            />
-                                        ))}
-                                    </div>
-                                </div>
+                                <img
+                                    src={`data:image/jpeg;base64,${oferta.imagenes[0]}`}
+                                    alt={`Imagen de ${oferta.titulo}`}
+                                    style={{ width: '100%', height: 'auto', borderRadius: '8px' }}
+                                />
                             )}
-                        </li>
+                            <p>Ubicación: {oferta.ubicacion}</p>
+                            <Link href={`/ofertas/ver/${oferta.idOferta}`}>
+                                <button style={{ marginTop: '10px', padding: '10px 15px', cursor: 'pointer' }}>Ver detalles</button>
+                            </Link>
+
+                        </div>
                     ))}
-                </ul>
+                </div>
             ) : (
                 <p>No hay ofertas disponibles.</p>
             )}
-            <div>
+            <div style={{ marginTop: '20px' }}>
                 <button onClick={handlePreviousPage} disabled={page === 1}>
                     Anterior
                 </button>
-                <span>Página {page}</span>
+                <span style={{ margin: '0 10px' }}>Página {page}</span>
                 <button onClick={handleNextPage}>Siguiente</button>
             </div>
         </div>

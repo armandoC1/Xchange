@@ -29,3 +29,13 @@ export const eliminarCategoria = async (id) => {
         throw error;
     }
 };
+
+export const obtenerCategoriaPorId = async (idCategoria) => {
+    try {
+        const response = await axiosInstance.get(`/categorias/find/${idCategoria}`);
+        return response.data; // Debería incluir el nombre de la categoría
+    } catch (error) {
+        console.error('Error al obtener la categoría:', error);
+        throw error;
+    }
+};
