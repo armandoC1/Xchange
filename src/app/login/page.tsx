@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useState, type ChangeEvent, type FormEvent } from 'react'
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
-import { Mail, Lock, LogIn } from 'lucide-react'
+import { useState, ChangeEvent, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Mail, Lock, LogIn } from 'lucide-react';
 
 type Credentials = {
   correo: string
