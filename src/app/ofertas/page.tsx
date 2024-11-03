@@ -59,6 +59,7 @@ export default function OfertasPage() {
                                 <button style={{ marginTop: '10px', padding: '10px 15px', cursor: 'pointer' }}>Ver detalles</button>
                             </Link>
 
+
                         </div>
                     ))}
                 </div>

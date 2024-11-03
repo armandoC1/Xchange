@@ -1,12 +1,12 @@
 import axiosInstance from "./axiosInstance";
 
-export const listadoPaginado = async (page = 1, limit = 10) =>{
+export const listadoPaginado = async (page = 1, limit = 10) => {
     try {
-        const response = await axiosInstance.get('/ofertas',{
+        const response = await axiosInstance.get('/ofertas', {
             page,
             limit
         });
-        if(!response.data){
+        if (!response.data) {
             alert('No hay ofertas disponibles - Ofertas no disponibles');
         }
         return response.data;
@@ -18,7 +18,7 @@ export const listadoPaginado = async (page = 1, limit = 10) =>{
 
 export const guardarOferta = async (ofertaData) => {
     try {
-        const response = await axiosInstance.post('/ofertas/save',{
+        const response = await axiosInstance.post('/ofertas/save', {
             titulo: ofertaData.titulo,
             descripcion: ofertaData.titulo,
             condicion: ofertaData.condicion,
@@ -30,7 +30,7 @@ export const guardarOferta = async (ofertaData) => {
         return response.data;
     } catch (error) {
         console.log('Error al registrar la oferta', error);
-        throw error;        
+        throw error;
     }
 }
 
@@ -39,22 +39,22 @@ export const obtenerPorId = async (idOferta) => {
         const token = sessionStorage.getItem('token');
 
         const response = await axiosInstance.get(`/ofertas/findById/${idOferta}`);
-        
+
         return response.data;
     } catch (error) {
         if (error.response && error.response.status === 404) {
             console.error('Oferta no encontrada');
-            return null; 
+            return null;
         } else {
             console.error('Error al obtener la oferta:', error);
-            throw error; 
+            throw error;
         }
     }
 };
 
 export const editarOferta = async (ofertaData, idOferta) => {
     try {
-        const response = await axiosInstance.put(`/edit/${idOferta}`,{
+        const response = await axiosInstance.put(`/edit/${idOferta}`, {
             // idOferta: ofertaData.idOferta,
             titulo: ofertaData.titulo,
             descripcion: ofertaData.titulo,
@@ -67,7 +67,7 @@ export const editarOferta = async (ofertaData, idOferta) => {
         return response.data;
     } catch (error) {
         console.log('Error al registrar la oferta', error);
-        throw error;        
+        throw error;
     }
 }
 
@@ -78,10 +78,10 @@ export const obtenerPorTitulo = async (titulo) => {
     } catch (error) {
         if (error.response && error.response.status === 404) {
             console.error('Oferta no encontrada');
-            return null; 
+            return null;
         } else {
             console.error('Error al obtener la oferta:', error);
-            throw error; 
+            throw error;
         }
     }
 }
@@ -89,14 +89,14 @@ export const obtenerPorTitulo = async (titulo) => {
 export const eliminar = async (idOferta) => {
     try {
         const response = await axiosInstance.delete(`/delete/${idOferta}`);
-        return response.status  == 200;
+        return response.status == 200;
     } catch (error) {
         if (error.response && error.response.status === 404) {
             console.error('Oferta no encontrada');
-            return null; 
+            return null;
         } else {
             console.error('Error al borrar la oferta:', error);
-            throw error; 
+            throw error;
         }
     }
 }
