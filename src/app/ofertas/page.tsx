@@ -2,8 +2,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'
-import Link from 'next/link'
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { listadoPaginado } from '../services/ofertasService';
 
 interface Oferta {
@@ -20,6 +20,7 @@ interface Oferta {
 export default function OfertasPage() {
     const [ofertas, setOfertas] = useState<Oferta[]>([]);
     const [page, setPage] = useState(1);
+    const [totalOfertas, setTotalOfertas] = useState(0);
     const limit = 10;
 
     useEffect(() => {
@@ -27,6 +28,7 @@ export default function OfertasPage() {
             try {
                 const response = await listadoPaginado(page, limit);
                 setOfertas(response.content);
+                setTotalOfertas(response.totalElements); // Total de registros disponibles
             } catch (error) {
                 console.error('Error al cargar las ofertas:', error);
             }
@@ -35,7 +37,13 @@ export default function OfertasPage() {
         fetchOfertas();
     }, [page]);
 
-    const handleNextPage = () => setPage(prevPage => prevPage + 1);
+    const totalPages = Math.ceil(totalOfertas / limit);
+
+    const handleNextPage = () => {
+        if (page < totalPages) {
+            setPage(prevPage => prevPage + 1);
+        }
+    };
     const handlePreviousPage = () => setPage(prevPage => Math.max(prevPage - 1, 1));
 
     return (
@@ -58,20 +66,20 @@ export default function OfertasPage() {
                             <Link href={`/ofertas/ver/${oferta.idOferta}`}>
                                 <button style={{ marginTop: '10px', padding: '10px 15px', cursor: 'pointer' }}>Ver detalles</button>
                             </Link>
-
-
                         </div>
                     ))}
                 </div>
             ) : (
-                <p>No hay ofertas disponibles.</p>
+                <p></p>
             )}
             <div style={{ marginTop: '20px' }}>
                 <button onClick={handlePreviousPage} disabled={page === 1}>
                     Anterior
                 </button>
-                <span style={{ margin: '0 10px' }}>Página {page}</span>
-                <button onClick={handleNextPage}>Siguiente</button>
+                <span style={{ margin: '0 10px' }}>Página {page} de {totalPages}</span>
+                <button onClick={handleNextPage} disabled={page >= totalPages}>
+                    Siguiente
+                </button>
             </div>
         </div>
     );

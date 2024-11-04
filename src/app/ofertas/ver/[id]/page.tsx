@@ -31,14 +31,13 @@ export default function OfertaDetallesPage() {
                     const data = await obtenerPorId(id);
                     setOferta(data);
 
-                    // Obtener el nombre del usuario y de la categoría usando los IDs de la oferta
                     if (data.idUsuario) {
                         const usuario = await obtenerUsuarioPorId(data.idUsuario);
-                        setUsuarioNombre(usuario.nombre); // Asegúrate de que `usuario` tenga un campo `nombre`
+                        setUsuarioNombre(usuario.nombre); 
                     }
                     if (data.idCategoria) {
                         const categoria = await obtenerCategoriaPorId(data.idCategoria);
-                        setCategoriaNombre(categoria.nombre); // Asegúrate de que `categoria` tenga un campo `nombre`
+                        setCategoriaNombre(categoria.nombre); 
                     }
                 } catch (error) {
                     console.error('Error al cargar la oferta:', error);
