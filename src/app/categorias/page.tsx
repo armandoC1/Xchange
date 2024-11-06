@@ -12,8 +12,8 @@ interface Categoria {
 
 export default function CategoriasPage() {
     const [categorias, setCategorias] = useState<Categoria[]>([]);
-    const [page, setPage] = useState(1);   
-    const [totalCategorias, setTotalCategorias] = useState(0); 
+    const [page, setPage] = useState(1);
+    const [totalCategorias, setTotalCategorias] = useState(0);
     const limit = 10;
 
     useEffect(() => {
@@ -45,7 +45,7 @@ export default function CategoriasPage() {
         if (confirmacion) {
             try {
                 await eliminarCategoria(categoria.id);
-                console.log("Id que quiero eliminar: ",categoria.id) 
+                console.log("Id que quiero eliminar: ", categoria.id)
                 Swal.fire({
                     title: 'Categoría eliminada',
                     text: 'Categoría eliminada exitosamente.',
@@ -69,14 +69,14 @@ export default function CategoriasPage() {
             {categorias.length > 0 ? (
                 <div>
                     {categorias.map(categoria => (
-                        <div key={categoria.id}  style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                        <div key={categoria.id} style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
                             <h5 className='text-slate-950'>Nombre de la categoría: {categoria.nombre}</h5>
                             <button className='text-red-600' onClick={() => handleEliminarCategoria(categoria)}>Eliminar categoría</button>
-                            <br />
                             <Link href={`/categorias/editar-categoria/${categoria.id}`}>
                                 <button className='text-lime-500'>Editar categoria</button>
                             </Link>
                         </div>
+
                     ))}
                 </div>
             ) : (
