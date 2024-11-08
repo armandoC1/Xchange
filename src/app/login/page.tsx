@@ -44,6 +44,8 @@ export default function Login() {
         try {
           const data = JSON.parse(responseText)
           sessionStorage.setItem('token', data.token)
+          sessionStorage.setItem('idUsuario', data.idUsuario)
+          console.log('id desde login: ', data.idUsuario)
           alert('Inicio de sesión exitoso.')
           router.push('/')
         } catch (parseError) {

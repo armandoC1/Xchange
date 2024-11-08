@@ -1,10 +1,9 @@
-// src/app/ofertas/create/page.tsx
 "use client";
 
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { guardarOferta } from "@/app/services/ofertasService";
-import { obtenerTodasCategorias } from "@/app/services/categoriaService";
+import { mostrarCategorias } from "@/app/services/categoriaService";
 import { obtenerUsuarioPorId } from "@/app/services/usuarioService";
 
 interface Categoria {
@@ -28,8 +27,8 @@ export default function CrearOferta() {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const response = await obtenerTodasCategorias();
-        setCategorias(response.content); // Asegúrate de que `response.content` tiene el formato adecuado
+        const response = await mostrarCategorias();
+        setCategorias(response);
       } catch (error) {
         console.error("Error al cargar categorías:", error);
       }
@@ -37,7 +36,8 @@ export default function CrearOferta() {
 
     const fetchUsuario = async () => {
       try {
-        const idUsuario = sessionStorage.getItem("userId");
+        const idUsuario = sessionStorage.getItem('idUsuario');
+        console.log('Id del usuario desde oferta: ', idUsuario)
         if (idUsuario) {
           const user = await obtenerUsuarioPorId(Number(idUsuario));
           setUserId(user.idUsuario);
@@ -139,7 +139,7 @@ export default function CrearOferta() {
             required
           >
             <option value="">Seleccione una categoría</option>
-            {categorias.map((categoria) => (
+            {categorias?.map((categoria) => (
               <option key={categoria.id} value={categoria.id}>
                 {categoria.nombre}
               </option>
