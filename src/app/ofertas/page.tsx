@@ -49,6 +49,13 @@ export default function OfertasPage() {
     return (
         <div>
             <h1>Ofertas</h1>
+            <div style={{ marginBottom: '20px' }}>
+                <Link href="/ofertas/create">
+                    <button style={{ padding: '10px 20px', cursor: 'pointer' }}>
+                        Crear Nueva Oferta
+                    </button>
+                </Link>
+            </div>
             {ofertas.length > 0 ? (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
                     {ofertas.map(oferta => (
