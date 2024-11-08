@@ -1,4 +1,4 @@
-// authService.js
+
 import axiosInstance from './axiosInstance';
 
 export const login = async (correo_electronico, contrasena) => {

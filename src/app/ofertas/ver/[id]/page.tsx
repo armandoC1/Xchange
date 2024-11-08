@@ -53,7 +53,7 @@ export default function OfertaDetallesPage() {
     return (
         <div style={{ padding: '20px' }}>
             <h1>{oferta.titulo}</h1>
-            <p>{oferta.descripcion}</p>
+            <p>Descripcion: {oferta.descripcion}</p>
             <p>Condición: {oferta.condicion}</p>
             <p>Ubicación: {oferta.ubicacion}</p>
             <p>Categoría: {categoriaNombre || "Cargando categoría..."}</p>
