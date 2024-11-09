@@ -1,4 +1,4 @@
-// authService.js
+
 import axiosInstance from './axiosInstance';
 
 export const login = async (correo_electronico, contrasena) => {
@@ -7,8 +7,11 @@ export const login = async (correo_electronico, contrasena) => {
       correo_electronico,
       contrasena,
     });
+    const { idUsuario } = response.data
     const { token } = response.data;
+    sessionStorage.setItem('idUsuario', idUsuario)
     sessionStorage.setItem('token', token);
+    console.log('id del usuario desde auth:', idUsuario)
     console.log(token);
     return token;
   } catch (error) {

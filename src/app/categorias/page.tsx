@@ -11,10 +11,17 @@ interface Categoria {
 }
 
 export default function CategoriasPage() {
+<<<<<<< HEAD
     const [categorias, setCategorias] = useState<Categoria[]>([])
     const [page, setPage] = useState(1)   
     const [totalCategorias, setTotalCategorias] = useState(0) 
     const limit = 10
+=======
+    const [categorias, setCategorias] = useState<Categoria[]>([]);
+    const [page, setPage] = useState(1);
+    const [totalCategorias, setTotalCategorias] = useState(0);
+    const limit = 10;
+>>>>>>> origin/master
 
     useEffect(() => {
         const fetchCategorias = async () => {
@@ -44,8 +51,13 @@ export default function CategoriasPage() {
         const confirmacion = window.confirm(`¿Estás seguro de eliminar esta categoría ${categoria.nombre}?`)
         if (confirmacion) {
             try {
+<<<<<<< HEAD
                 await eliminarCategoria(categoria.id)
                 console.log("Id que quiero eliminar: ",categoria.id) 
+=======
+                await eliminarCategoria(categoria.id);
+                console.log("Id que quiero eliminar: ", categoria.id)
+>>>>>>> origin/master
                 Swal.fire({
                     title: 'Categoría eliminada',
                     text: 'Categoría eliminada exitosamente.',
@@ -64,6 +76,7 @@ export default function CategoriasPage() {
     }
 
     return (
+<<<<<<< HEAD
         <div className="min-h-screen bg-lavender-50 p-6 md:p-10">
             <div className="max-w-7xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-bold text-indigo-700 mb-10 text-center">Categorías</h1>
@@ -121,8 +134,28 @@ export default function CategoriasPage() {
                             Siguiente
                         </button>
                     </div>
+=======
+        <div>
+            <h1>Categorías</h1>
+            {categorias.length > 0 ? (
+                <div>
+                    {categorias.map(categoria => (
+                        <div key={categoria.id} style={{ border: '1px solid #ddd', padding: '16px', borderRadius: '8px', textAlign: 'center' }}>
+                            <h5 className='text-slate-950'>Nombre de la categoría: {categoria.nombre}</h5>
+                            <button className='text-red-600' onClick={() => handleEliminarCategoria(categoria)}>Eliminar categoría</button>
+                            <Link href={`/categorias/editar-categoria/${categoria.id}`}>
+                                <button className='text-lime-500'>Editar categoria</button>
+                            </Link>
+                        </div>
+
+                    ))}
+>>>>>>> origin/master
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
     )
+=======
+    );
+>>>>>>> origin/master
 }

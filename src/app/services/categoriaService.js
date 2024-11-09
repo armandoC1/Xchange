@@ -2,12 +2,14 @@ import axiosInstance from './axiosInstance';
 
 export const obtenerTodasCategorias = async (page = 1, limit = 10) => {
     try {
-        const response = await axiosInstance.get('/categorias', {
-            page,
-            limit
+        const response = await axiosInstance.get('/categorias/listPage', {
+            params: {
+                page: page - 1, 
+                size: limit     
+            }
         });
         if (!response.data) {
-            alert('No hay ofertas disponibles')
+            alert('No hay ofertas disponibles');
         }
         return response.data;
     } catch (error) {
@@ -15,6 +17,17 @@ export const obtenerTodasCategorias = async (page = 1, limit = 10) => {
         throw error;
     }
 };
+
+export const mostrarCategorias = async () => {
+    try {
+        const response = await axiosInstance.get('/categorias/list')
+        console.log('categorias' , response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error al obtener categorias ', error)
+        throw error
+    }
+}
 
 export const crearCategoria = async (categoria) => {
     try {
@@ -55,8 +68,8 @@ export const actualizarCategoria = async (categoria) => {
 
 export const obtenerCategoriaPorId = async (idCategoria) => {
     try {
-        const response = await axiosInstance.get(`/categorias/find/${idCategoria}`);
-        console.log( "data: ",response.data)
+        const response = await axiosInstance.get(`/categorias/findById/${idCategoria}`);
+        console.log("data: ", response.data)
         return response.data;
     } catch (error) {
         console.error('Error al obtener la categoría:', error);

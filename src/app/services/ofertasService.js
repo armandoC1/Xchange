@@ -2,9 +2,11 @@ import axiosInstance from "./axiosInstance";
 
 export const listadoPaginado = async (page = 1, limit = 10) => {
     try {
-        const response = await axiosInstance.get('/ofertas', {
-            page,
-            limit
+        const response = await axiosInstance.get('/ofertas/listPage', {
+            params: {
+                page: page - 1,
+                size: limit
+            }
         });
         if (!response.data) {
             alert('No hay ofertas disponibles - Ofertas no disponibles');
@@ -73,7 +75,7 @@ export const editarOferta = async (ofertaData, idOferta) => {
 
 export const obtenerPorTitulo = async (titulo) => {
     try {
-        const response = await axiosInstance.get(`/buscar/${titulo}`);
+        const response = await axiosInstance.get(`/findByTitle/${titulo}`);
         return response.data;
     } catch (error) {
         if (error.response && error.response.status === 404) {

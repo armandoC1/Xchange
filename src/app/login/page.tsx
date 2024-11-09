@@ -25,7 +25,7 @@ export default function Login() {
     e.preventDefault()
     console.log('Datos que se enviarán:', credentials)
     try {
-      const res = await fetch('http://localhost:8080/usuarios/login', {
+      const res = await fetch('http://3.137.192.224:8080/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,6 +44,8 @@ export default function Login() {
         try {
           const data = JSON.parse(responseText)
           sessionStorage.setItem('token', data.token)
+          sessionStorage.setItem('idUsuario', data.idUsuario)
+          console.log('id desde login: ', data.idUsuario)
           alert('Inicio de sesión exitoso.')
           router.push('/')
         } catch (parseError) {
