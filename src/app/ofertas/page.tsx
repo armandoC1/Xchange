@@ -70,7 +70,7 @@ export default function OfertasPage() {
                                 />
                             )}
                             <p>Ubicación: {oferta.ubicacion}</p>
-                            <Link href={`/ofertas/ver/${oferta.idOferta}`}>
+                            <Link href={`/ofertas/ver/${oferta.idOferta}`}> 
                                 <button style={{ marginTop: '10px', padding: '10px 15px', cursor: 'pointer' }}>Ver detalles</button>
                             </Link>
                         </div>
