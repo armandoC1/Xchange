@@ -4,7 +4,6 @@ export const sendMessage = async (messageData) => {
     try {
         const response = await axiosInstance.post('/mensajes/sendMenssage', {
             contenidoMensaje: messageData.contenidoMensaje,
-            idOferta: messageData.idOferta,
             idRemitente: messageData.idRemitente,
             idDestinatario: messageData.idDestinatario
         });
@@ -16,12 +15,16 @@ export const sendMessage = async (messageData) => {
     }
 }
 
-export const chatMessage = async () => {
+export const getGroupedMessages = async (userId) => {
     try {
-        const response = await axiosInstance.get('/mensajes/chat')
-        return response.data
+        const response = await axiosInstance.get('/mensajes/chat', {
+            params: {
+                userId
+            }
+        });
+        return response.data;
     } catch (error) {
-        console.error('Error al obtener mensajes, desde servicio', error)
-        throw error
+        console.error('Error al obtener mensajes agrupados:', error);
+        throw error;
     }
-}
+};

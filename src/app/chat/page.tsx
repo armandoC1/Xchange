@@ -1,64 +1,128 @@
 "use client";
 import { useEffect, useState } from 'react';
-import {sendMessage} from '../services/chatService'
+import { getGroupedMessages } from '../services/chatService';
+import { useRouter } from 'next/navigation';
+import { obtenerUsuarioPorId } from '../services/usuarioService';
 
-const MessagePage = () => {
-    const [contenidoMensaje, setContenidoMensaje] = useState('');
-    const [idOferta, setIdOferta] = useState<string | null>(null);
-    const [idRemitente, setIdRemitente] = useState<string | null>(null);
-    const [idDestinatario, setIdDestinatario] = useState<string | null>(null);
+interface Message {
+    id: number;
+    contenidoMensaje: string;
+    fechaEnvio: string;
+    idRemitente: number;
+    idDestinatario: number;
+}
+
+interface ChatPreview {
+    id: number;
+    lastMessage: string;
+    lastMessageDate: string;
+    userId: number;
+    userName: string;
+}
+
+const ChatsPage = () => {
+    const [chatPreviews, setChatPreviews] = useState<ChatPreview[]>([]);
     const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+    const router = useRouter();
+    const [userId, setUserId] = useState<number | null>(null);
 
     useEffect(() => {
-        // Carga los datos desde sessionStorage al montar el componente
-        const storedIdOferta = sessionStorage.getItem('idOferta');
-        const storedIdRemitente = sessionStorage.getItem('idUsuario');
-        const storedIdDestinatario = sessionStorage.getItem('idDestinatario');
-
-        setIdOferta(storedIdOferta);
-        setIdRemitente(storedIdRemitente);
-        setIdDestinatario(storedIdDestinatario);
-
-        // Imprime los IDs en consola
-        console.log('ID Oferta:', storedIdOferta);
-        console.log('ID Remitente:', storedIdRemitente);
-        console.log('ID Destinatario:', storedIdDestinatario);
+        const storedUserId = sessionStorage.getItem('idUsuario');
+        if (storedUserId) {
+            const userIdNumber = parseInt(storedUserId);
+            setUserId(userIdNumber);
+            fetchChats(userIdNumber);
+        } else {
+            setError("No se puede cargar la lista de chats sin el ID de usuario.");
+            setLoading(false);
+        }
     }, []);
 
-    const handleSendMessage = async () => {
-        if (!contenidoMensaje || !idOferta || !idRemitente || !idDestinatario) {
-            setError('Todos los campos son necesarios');
-            return;
-        }
+    const fetchChats = async (userId: number) => {
+        setLoading(true);
         try {
-            const messageData = {
-                contenidoMensaje,
-                idOferta: parseInt(idOferta),
-                idRemitente: parseInt(idRemitente),
-                idDestinatario: parseInt(idDestinatario)
-            };
-            console.log('cuerpo del mensaje: ', messageData)
-            await sendMessage(messageData);
-            setContenidoMensaje(''); // Limpia el campo después de enviar
+            const data = await getGroupedMessages(userId);
+            const chatPreviews = await Promise.all(
+                Object.entries(data)
+                    .flatMap(async ([key, groupedMessages]) => {
+                        const messagesArray = Object.values(groupedMessages as Record<string, Message[]>).flat();
+                        if (messagesArray.length > 0) {
+                            const lastMessage = messagesArray[messagesArray.length - 1];
+                            if (lastMessage.idDestinatario === userId) {
+                                try {
+                                    const userNameData = await obtenerUsuarioPorId(lastMessage.idRemitente);
+                                    console.log('nombre de usuario', userNameData.nombre)
+                                    return {
+                                        id: lastMessage.id,
+                                        lastMessage: lastMessage.contenidoMensaje,
+                                        lastMessageDate: lastMessage.fechaEnvio,
+                                        userId: lastMessage.idRemitente,
+                                        userName: userNameData.nombre || `Usuario ${lastMessage.idRemitente}`,
+                                    };
+                                } catch {
+                                    return {
+                                        id: lastMessage.id,
+                                        lastMessage: lastMessage.contenidoMensaje,
+                                        lastMessageDate: lastMessage.fechaEnvio,
+                                        userId: lastMessage.idRemitente,
+                                        userName: `Usuario ${lastMessage.idRemitente}`,
+                                    };
+                                }
+                            }
+                        }
+                        return null;
+                    })
+            );
 
-        } catch (err) {
-            console.error('Error al mandar mensaje:', err);
-            setError('Hubo un error al enviar el mensaje. Inténtalo nuevamente.');
+            setChatPreviews(chatPreviews.filter((chat): chat is ChatPreview => chat !== null));
+        } catch (error) {
+            console.error('Error al obtener la lista de chats:', error);
+            setError('Hubo un error al cargar la lista de chats.');
+        } finally {
+            setLoading(false);
         }
     };
 
+    const handleChatClick = (chat: ChatPreview) => {
+        router.push(`/chat/${chat.userId}`);
+    };
+
     return (
-        <div>
-            <h1>Enviar Mensaje</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            <textarea
-                value={contenidoMensaje}
-                onChange={(e) => setContenidoMensaje(e.target.value)}
-                placeholder="Escribe tu mensaje aquí..."
-            />
-            <button onClick={handleSendMessage}>Enviar</button>
+        <div className="flex flex-col items-center min-h-screen bg-blue-50 p-5">
+            <h1 className="text-3xl font-bold text-blue-800 mb-5">Lista de Chats</h1>
+            {error && <p className="text-red-600">{error}</p>}
+
+            {loading && (
+                <div className="flex flex-col items-center mt-5">
+                    <div className="animate-spin border-4 border-blue-200 border-t-blue-600 rounded-full w-10 h-10"></div>
+                    <p className="text-blue-800 mt-2">Cargando chats...</p>
+                </div>
+            )}
+
+            {!loading && (
+                <div className="w-full max-w-lg mt-5 space-y-4">
+                    {chatPreviews.length > 0 ? (
+                        chatPreviews.map((chat) => (
+                            <div
+                                key={chat.id}
+                                onClick={() => handleChatClick(chat)}
+                                className="cursor-pointer rounded-lg bg-white p-4 shadow-md border-l-4 border-blue-600 hover:bg-blue-100 transition"
+                            >
+                                <h2 className="text-blue-800 font-semibold">{chat.userName}</h2>
+                                <p className="text-gray-700 mt-1">{chat.lastMessage}</p>
+                                <p className="text-gray-500 text-sm mt-2">
+                                    Fecha: {new Date(chat.lastMessageDate).toLocaleString()}
+                                </p>
+                            </div>
+                        ))
+                    ) : (
+                        <p className="text-gray-700 text-center">No hay chats para mostrar.</p>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
 
-export default MessagePage;
+export default ChatsPage;

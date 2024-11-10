@@ -80,7 +80,7 @@ export default function OfertaDetallesPage() {
                     ))}
                 </div>
             )}
-            <Link href= "/chat">
+            <Link href= "/chat/privado">
                 <button>Mandar mensaje privado </button>
             </Link>
         </div>
