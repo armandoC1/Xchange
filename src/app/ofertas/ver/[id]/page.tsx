@@ -1,4 +1,3 @@
-// src/app/ofertas/ver/[id].tsx
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -6,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { obtenerPorId } from '@/app/services/ofertasService';
 import { obtenerUsuarioPorId } from '@/app/services/usuarioService';
 import { obtenerCategoriaPorId } from '@/app/services/categoriaService';
+import Link from 'next/link';
 
 interface Oferta {
     idOferta: number;
@@ -29,10 +29,19 @@ export default function OfertaDetallesPage() {
             const fetchOferta = async () => {
                 try {
                     const data = await obtenerPorId(id);
+                    let idOfert = id
+                   
+                    sessionStorage.setItem('idOferta', id.toString())
+                    const ofertId = sessionStorage.getItem('idOferta')
+                    console.log('prueba id : ', ofertId)
                     setOferta(data);
-
+                    
                     if (data.idUsuario) {
                         const usuario = await obtenerUsuarioPorId(data.idUsuario);
+                        sessionStorage.setItem('idDestinatario', data.idUsuario)
+                        console.log('id destinatario ', data.idUsuario)
+                        const idRemitente = sessionStorage.getItem('idUsuario')
+                        console.log('id remitente: ', idRemitente)
                         setUsuarioNombre(usuario.nombre); 
                     }
                     if (data.idCategoria) {
@@ -53,7 +62,7 @@ export default function OfertaDetallesPage() {
     return (
         <div style={{ padding: '20px' }}>
             <h1>{oferta.titulo}</h1>
-            <p>{oferta.descripcion}</p>
+            <p>Descripcion: {oferta.descripcion}</p>
             <p>Condición: {oferta.condicion}</p>
             <p>Ubicación: {oferta.ubicacion}</p>
             <p>Categoría: {categoriaNombre || "Cargando categoría..."}</p>
@@ -71,6 +80,9 @@ export default function OfertaDetallesPage() {
                     ))}
                 </div>
             )}
+            <Link href= "/chat/privado">
+                <button>Mandar mensaje privado </button>
+            </Link>
         </div>
     );
 }

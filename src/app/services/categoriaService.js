@@ -18,6 +18,16 @@ export const obtenerTodasCategorias = async (page = 1, limit = 10) => {
     }
 };
 
+export const mostrarCategorias = async () => {
+    try {
+        const response = await axiosInstance.get('/categorias/list')
+        console.log('categorias' , response.data)
+        return response.data
+    } catch (error) {
+        console.error('Error al obtener categorias ', error)
+        throw error
+    }
+}
 
 export const crearCategoria = async (categoria) => {
     try {
