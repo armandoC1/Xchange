@@ -1,5 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
+//funciona
 export const sendMessage = async (messageData) => {
     try {
         const response = await axiosInstance.post('/mensajes/sendMenssage', {
@@ -7,7 +8,6 @@ export const sendMessage = async (messageData) => {
             idRemitente: messageData.idRemitente,
             idDestinatario: messageData.idDestinatario
         });
-
         return response.data
     } catch (error) {
         console.log('Error al mandar mensaje: ', error)
@@ -15,6 +15,7 @@ export const sendMessage = async (messageData) => {
     }
 }
 
+//funciona
 export const getGroupedMessages = async (userId) => {
     try {
         const response = await axiosInstance.get('/mensajes/chat', {

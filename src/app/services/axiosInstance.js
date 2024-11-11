@@ -5,10 +5,10 @@ const axiosInstance = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  // http://3.137.192.224:8080
 });
 axiosInstance.interceptors.request.use((config) => {
   const token = sessionStorage.getItem('token');
-  console.log('token: ', token)
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

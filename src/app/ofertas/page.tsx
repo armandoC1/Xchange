@@ -21,8 +21,8 @@ export default function OfertasPage() {
   const [page, setPage] = useState(1);
   const [totalOfertas, setTotalOfertas] = useState(0);
   const [loading, setLoading] = useState(true);
-  const limit = 5; // Maximum 5 publications per page
-  const userId = parseInt(sessionStorage.getItem('idUsuario') || '0'); // Obtén el ID de usuario desde sessionStorage
+  const limit = 5; 
+  const userId = parseInt(sessionStorage.getItem('idUsuario') || '0'); 
 
   useEffect(() => {
     const fetchOfertas = async () => {
@@ -31,7 +31,7 @@ export default function OfertasPage() {
         const response = await listadoPaginado(page, limit);
         const filteredOfertas = response.content.filter((oferta: Oferta) => oferta.idUsuario !== userId);
         setOfertas(filteredOfertas);
-        setTotalOfertas(response.totalElements - filteredOfertas.length); // Ajusta el total de ofertas
+        setTotalOfertas(response.totalElements - filteredOfertas.length); 
       } catch (error) {
         console.error('Error al cargar las ofertas:', error);
         Swal.fire({

@@ -1,5 +1,6 @@
 import axiosInstance from "./axiosInstance";
 
+//ya esta
 export const listadoPaginado = async (page = 1, limit = 10) => {
     try {
         const response = await axiosInstance.get('/ofertas/listPage', {
@@ -18,6 +19,7 @@ export const listadoPaginado = async (page = 1, limit = 10) => {
     }
 }
 
+//en proceso
 export const guardarOferta = async (ofertaData) => {
     try {
         const response = await axiosInstance.post('/ofertas/save', {
@@ -36,6 +38,7 @@ export const guardarOferta = async (ofertaData) => {
     }
 }
 
+//ya funciona
 export const obtenerPorId = async (idOferta) => {
     try {
         const token = sessionStorage.getItem('token');
@@ -54,6 +57,7 @@ export const obtenerPorId = async (idOferta) => {
     }
 };
 
+//aun no 
 export const editarOferta = async (ofertaData, idOferta) => {
     try {
         const response = await axiosInstance.put(`/edit/${idOferta}`, {
@@ -73,6 +77,7 @@ export const editarOferta = async (ofertaData, idOferta) => {
     }
 }
 
+// aun no
 export const obtenerPorTitulo = async (titulo) => {
     try {
         const response = await axiosInstance.get(`/findByTitle/${titulo}`);
@@ -88,6 +93,7 @@ export const obtenerPorTitulo = async (titulo) => {
     }
 }
 
+//aun no
 export const eliminar = async (idOferta) => {
     try {
         const response = await axiosInstance.delete(`/delete/${idOferta}`);
