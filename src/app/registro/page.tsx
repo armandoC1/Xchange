@@ -66,7 +66,7 @@ export default function Registro() {
     }
 
     try {
-      const res = await fetch('http://localhost:8080/usuarios/registro', {
+      const res = await fetch('http://3.137.192.224:8080/usuarios/registro', {
         method: 'POST',
         body: formDataToSend,
       })

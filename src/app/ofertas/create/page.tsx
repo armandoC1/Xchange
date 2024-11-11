@@ -37,7 +37,8 @@ export default function CrearOferta() {
 
     const fetchUsuario = async () => {
       try {
-        const idUsuario = sessionStorage.getItem("userId");
+        const idUsuario = sessionStorage.getItem("idUsuario");
+        console.log('id desde creaar oferta: ', idUsuario)
         if (idUsuario) {
           const user = await obtenerUsuarioPorId(Number(idUsuario));
           setUserId(user.idUsuario);
