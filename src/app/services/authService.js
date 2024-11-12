@@ -1,6 +1,7 @@
 
 import axiosInstance from './axiosInstance';
 
+//ya funciona
 export const login = async (correo_electronico, contrasena) => {
   try {
     const response = await axiosInstance.post('/usuarios/login', {
@@ -11,16 +12,14 @@ export const login = async (correo_electronico, contrasena) => {
     const { token } = response.data;
     sessionStorage.setItem('idUsuario', idUsuario)
     sessionStorage.setItem('token', token);
-    console.log('id del usuario desde auth:', idUsuario)
-    console.log(token);
     return token;
   } catch (error) {
-    console.log(correo_electronico);
     console.error('Error en inicio de sesión:', error);
     throw error;
   }
 };
 
+//ya funciona
 export const register = async (usuarioData) => {
   try {
     const response = await axiosInstance.post('/usuarios/registro', {

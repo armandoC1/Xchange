@@ -44,35 +44,31 @@ const ChatsPage = () => {
         try {
             const data = await getGroupedMessages(userId);
             const chatPreviews = await Promise.all(
-                Object.entries(data)
-                    .flatMap(async ([key, groupedMessages]) => {
-                        const messagesArray = Object.values(groupedMessages as Record<string, Message[]>).flat();
-                        if (messagesArray.length > 0) {
-                            const lastMessage = messagesArray[messagesArray.length - 1];
-                            if (lastMessage.idDestinatario === userId) {
-                                try {
-                                    const userNameData = await obtenerUsuarioPorId(lastMessage.idRemitente);
-                                    console.log('nombre de usuario', userNameData.nombre)
-                                    return {
-                                        id: lastMessage.id,
-                                        lastMessage: lastMessage.contenidoMensaje,
-                                        lastMessageDate: lastMessage.fechaEnvio,
-                                        userId: lastMessage.idRemitente,
-                                        userName: userNameData.nombre || `Usuario ${lastMessage.idRemitente}`,
-                                    };
-                                } catch {
-                                    return {
-                                        id: lastMessage.id,
-                                        lastMessage: lastMessage.contenidoMensaje,
-                                        lastMessageDate: lastMessage.fechaEnvio,
-                                        userId: lastMessage.idRemitente,
-                                        userName: `Usuario ${lastMessage.idRemitente}`,
-                                    };
-                                }
-                            }
+                Object.entries(data[userId] || {}).map(async ([otherUserId, messages]) => {
+                    const messagesArray = messages as Message[];
+                    if (messagesArray.length > 0) {
+                        const lastMessage = messagesArray[messagesArray.length - 1];
+                        try {
+                            const userNameData = await obtenerUsuarioPorId(parseInt(otherUserId));
+                            return {
+                                id: lastMessage.id,
+                                lastMessage: lastMessage.contenidoMensaje,
+                                lastMessageDate: lastMessage.fechaEnvio,
+                                userId: parseInt(otherUserId),
+                                userName: userNameData.nombre || `Usuario ${otherUserId}`,
+                            };
+                        } catch {
+                            return {
+                                id: lastMessage.id,
+                                lastMessage: lastMessage.contenidoMensaje,
+                                lastMessageDate: lastMessage.fechaEnvio,
+                                userId: parseInt(otherUserId),
+                                userName: `Usuario ${otherUserId}`,
+                            };
                         }
-                        return null;
-                    })
+                    }
+                    return null;
+                })
             );
 
             setChatPreviews(chatPreviews.filter((chat): chat is ChatPreview => chat !== null));
@@ -85,6 +81,7 @@ const ChatsPage = () => {
     };
 
     const handleChatClick = (chat: ChatPreview) => {
+        sessionStorage.setItem('idDestinatario', chat.userId.toString());
         router.push(`/chat/${chat.userId}`);
     };
 

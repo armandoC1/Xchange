@@ -1,6 +1,7 @@
 import axiosInstance from "./axiosInstance";
 import Swal from 'sweetalert2';
 
+//ya esta
 export const listadoPaginado = async (page = 1, limit = 10) => {
     try {
         const response = await axiosInstance.get('/ofertas/listPage', {
@@ -20,6 +21,7 @@ export const listadoPaginado = async (page = 1, limit = 10) => {
 };
 
 
+//en proceso
 export const guardarOferta = async (ofertaData) => {
     try {
       const formData = new FormData();
@@ -34,6 +36,7 @@ export const guardarOferta = async (ofertaData) => {
         ofertaData.imagenes.forEach((imagen) => {
           formData.append("imagenes", imagen);
         });
+<<<<<<< HEAD
       }
   
       const token = sessionStorage.getItem('token');
@@ -42,6 +45,46 @@ export const guardarOferta = async (ofertaData) => {
           icon: 'error',
           title: 'Error de autenticación',
           text: 'Token de autenticación no encontrado o ha expirado. Por favor, inicia sesión de nuevo.',
+=======
+        return response.data;
+    } catch (error) {
+        console.log('Error al registrar la oferta', error);
+        throw error;
+    }
+}
+
+//ya funciona
+export const obtenerPorId = async (idOferta) => {
+    try {
+        const token = sessionStorage.getItem('token');
+
+        const response = await axiosInstance.get(`/ofertas/findById/${idOferta}`);
+
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            console.error('Oferta no encontrada');
+            return null;
+        } else {
+            console.error('Error al obtener la oferta:', error);
+            throw error;
+        }
+    }
+};
+
+//aun no 
+export const editarOferta = async (ofertaData, idOferta) => {
+    try {
+        const response = await axiosInstance.put(`/edit/${idOferta}`, {
+            // idOferta: ofertaData.idOferta,
+            titulo: ofertaData.titulo,
+            descripcion: ofertaData.titulo,
+            condicion: ofertaData.condicion,
+            ubicacion: ofertaData.ubicacion,
+            imagenes: ofertaData.imagenes,
+            idCategoria: ofertaData.idCategoria,
+            idUsuario: ofertaData.idUsuario
+>>>>>>> 5eb2bf2d1a4dc8456c0083212ddf6b0bd79191dc
         });
         return;
       }
@@ -66,8 +109,29 @@ export const guardarOferta = async (ofertaData) => {
   
       throw error;
     }
+<<<<<<< HEAD
   };
+=======
+}
 
+// aun no
+export const obtenerPorTitulo = async (titulo) => {
+    try {
+        const response = await axiosInstance.get(`/findByTitle/${titulo}`);
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 404) {
+            console.error('Oferta no encontrada');
+            return null;
+        } else {
+            console.error('Error al obtener la oferta:', error);
+            throw error;
+        }
+    }
+}
+>>>>>>> 5eb2bf2d1a4dc8456c0083212ddf6b0bd79191dc
+
+//aun no
 export const eliminar = async (idOferta) => {
     try {
         const response = await axiosInstance.delete(`/ofertas/delete/${idOferta}`);

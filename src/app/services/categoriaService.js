@@ -1,11 +1,12 @@
 import axiosInstance from './axiosInstance';
 
+//ya funciona
 export const obtenerTodasCategorias = async (page = 1, limit = 10) => {
     try {
         const response = await axiosInstance.get('/categorias/listPage', {
             params: {
-                page: page - 1, 
-                size: limit     
+                page: page - 1,
+                size: limit
             }
         });
         if (!response.data) {
@@ -18,10 +19,10 @@ export const obtenerTodasCategorias = async (page = 1, limit = 10) => {
     }
 };
 
+//ya funciona
 export const mostrarCategorias = async () => {
     try {
         const response = await axiosInstance.get('/categorias/list')
-        console.log('categorias' , response.data)
         return response.data
     } catch (error) {
         console.error('Error al obtener categorias ', error)
@@ -29,6 +30,7 @@ export const mostrarCategorias = async () => {
     }
 }
 
+//funciona
 export const crearCategoria = async (categoria) => {
     try {
         const response = await axiosInstance.post('/categorias/save', categoria);
@@ -39,8 +41,8 @@ export const crearCategoria = async (categoria) => {
     }
 };
 
+//funciona
 export const eliminarCategoria = async (id) => {
-    console.log("id a eliminar ", id)
     try {
         const response = await axiosInstance.delete(`/categorias/delete/${id}`);
         return response.status == 200;
@@ -54,6 +56,7 @@ export const eliminarCategoria = async (id) => {
     }
 };
 
+//funciona
 export const actualizarCategoria = async (categoria) => {
     try {
         const response = await axiosInstance.put(`/categorias/edit/${categoria.id}`, {
@@ -66,10 +69,10 @@ export const actualizarCategoria = async (categoria) => {
     }
 };
 
+//funciona
 export const obtenerCategoriaPorId = async (idCategoria) => {
     try {
         const response = await axiosInstance.get(`/categorias/findById/${idCategoria}`);
-        console.log("data: ", response.data)
         return response.data;
     } catch (error) {
         console.error('Error al obtener la categoría:', error);
