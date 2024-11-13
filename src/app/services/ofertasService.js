@@ -63,17 +63,21 @@ export const obtenerPorId = async (idOferta) => {
 
  export const guardarOferta = async (ofertaData) => {
      try {
+        console.log('imagenes')
+        console.log(ofertaData.imagenes)
+        console.log(ofertaData)
         const respónse = await axiosInstance.post('/ofertas/save', {
             oferta: {
                 titulo: ofertaData.titulo,
                 descripcion: ofertaData.descripcion,
                 condicion: ofertaData.condicion,
                 ubicacion: ofertaData.ubicacion,
-                imagenes: ofertaData.imagenes, //estar pendiente que podria cambiar
-                idCategoria: ofertaData.idCategoria,
+                imagenes: ofertaData.imagenes, 
                 idUsuario: ofertaData.idUsuario
+                
             }
         })
+  
         return response.data
      } catch (error) {
          console.error('Error al registrar ofertas: ', error)
