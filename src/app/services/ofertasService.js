@@ -1,5 +1,6 @@
 import axiosInstance from "./axiosInstance";
-import Swal from 'sweetalert2';
+
+//HOLA MUNDO 
 
 //ya esta
 export const listadoPaginado = async (page = 1, limit = 10) => {
@@ -20,39 +21,6 @@ export const listadoPaginado = async (page = 1, limit = 10) => {
     }
 };
 
-
-//en proceso
-export const guardarOferta = async (ofertaData) => {
-    try {
-      const formData = new FormData();
-      formData.append("titulo", ofertaData.titulo);
-      formData.append("descripcion", ofertaData.descripcion);
-      formData.append("condicion", ofertaData.condicion);
-      formData.append("ubicacion", ofertaData.ubicacion);
-      formData.append("idCategoria", ofertaData.idCategoria);
-      formData.append("idUsuario", ofertaData.idUsuario);
-  
-      if (Array.isArray(ofertaData.imagenes) && ofertaData.imagenes.length > 0) {
-        ofertaData.imagenes.forEach((imagen) => {
-          formData.append("imagenes", imagen);
-        });
-<<<<<<< HEAD
-      }
-  
-      const token = sessionStorage.getItem('token');
-      if (!token) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error de autenticación',
-          text: 'Token de autenticación no encontrado o ha expirado. Por favor, inicia sesión de nuevo.',
-=======
-        return response.data;
-    } catch (error) {
-        console.log('Error al registrar la oferta', error);
-        throw error;
-    }
-}
-
 //ya funciona
 export const obtenerPorId = async (idOferta) => {
     try {
@@ -72,47 +40,46 @@ export const obtenerPorId = async (idOferta) => {
     }
 };
 
-//aun no 
-export const editarOferta = async (ofertaData, idOferta) => {
-    try {
-        const response = await axiosInstance.put(`/edit/${idOferta}`, {
-            // idOferta: ofertaData.idOferta,
-            titulo: ofertaData.titulo,
-            descripcion: ofertaData.titulo,
-            condicion: ofertaData.condicion,
-            ubicacion: ofertaData.ubicacion,
-            imagenes: ofertaData.imagenes,
-            idCategoria: ofertaData.idCategoria,
-            idUsuario: ofertaData.idUsuario
->>>>>>> 5eb2bf2d1a4dc8456c0083212ddf6b0bd79191dc
-        });
-        return;
-      }
-  
-      const response = await axiosInstance.post('/ofertas/save', formData, {
-        headers: {
-          'Authorization': `Bearer ${token}`, // Agrega el token manualmente aquí
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-  
-      return response.data;
-    } catch (error) {
-      console.error('Error al registrar la oferta:', error);
-  
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Hubo un error al crear la oferta. Verifica los datos e inténtalo de nuevo.',
-        confirmButtonColor: '#3B82F6',
-      });
-  
-      throw error;
-    }
-<<<<<<< HEAD
-  };
-=======
-}
+//modificado para estar similar al de guardar oferta
+ export const editarOferta = async (ofertaData, idOferta) => {
+     try {
+         const response = await axiosInstance.put(`/edit/${idOferta}`, {
+            oferta: {
+                titulo: ofertaData.titulo,
+                descripcion: ofertaData.descripcion,
+                condicion: ofertaData.condicion,
+                ubicacion: ofertaData.ubicacion,
+                imagenes: ofertaData.imagenes, //estar pendiente que podria cambiar
+                idCategoria: ofertaData.idCategoria,
+                idUsuario: ofertaData.idUsuario
+            }
+         });
+         return response.data;
+     } catch (error) {
+         console.error('Error al registrar la oferta', error);
+         throw error;
+     }
+ }
+
+ export const guardarOferta = async (ofertaData) => {
+     try {
+        const respónse = await axiosInstance.post('/ofertas/save', {
+            oferta: {
+                titulo: ofertaData.titulo,
+                descripcion: ofertaData.descripcion,
+                condicion: ofertaData.condicion,
+                ubicacion: ofertaData.ubicacion,
+                imagenes: ofertaData.imagenes, //estar pendiente que podria cambiar
+                idCategoria: ofertaData.idCategoria,
+                idUsuario: ofertaData.idUsuario
+            }
+        })
+        return response.data
+     } catch (error) {
+         console.error('Error al registrar ofertas: ', error)
+         throw error
+     }
+ }
 
 // aun no
 export const obtenerPorTitulo = async (titulo) => {
@@ -129,7 +96,6 @@ export const obtenerPorTitulo = async (titulo) => {
         }
     }
 }
->>>>>>> 5eb2bf2d1a4dc8456c0083212ddf6b0bd79191dc
 
 //aun no
 export const eliminar = async (idOferta) => {
@@ -147,107 +113,6 @@ export const eliminar = async (idOferta) => {
     }
 };
 
-// import axiosInstance from "./axiosInstance";
 
-// export const listadoPaginado = async (page = 1, limit = 10) => {
-//     try {
-//         const response = await axiosInstance.get('/ofertas/listPage', {
-//             params: {
-//                 page: page - 1,
-//                 size: limit
-//             }
-//         });
-//         if (!response.data) {
-//             alert('No hay ofertas disponibles - Ofertas no disponibles');
-//         }
-//         return response.data;
-//     } catch (error) {
-//         console.log('Error al cargar las categorias', error);
-//         throw error;
-//     }
-// }
 
-// export const guardarOferta = async (ofertaData) => {
-//     try {
-//         const response = await axiosInstance.post('/ofertas/save', {
-//             titulo: ofertaData.titulo,
-//             descripcion: ofertaData.titulo,
-//             condicion: ofertaData.condicion,
-//             ubicacion: ofertaData.ubicacion,
-//             imagenes: ofertaData.imagenes,
-//             idCategoria: ofertaData.idCategoria,
-//             idUsuario: ofertaData.idUsuario
-//         });
-//         return response.data;
-//     } catch (error) {
-//         console.log('Error al registrar la oferta', error);
-//         throw error;
-//     }
-// }
 
-// export const obtenerPorId = async (idOferta) => {
-//     try {
-//         const token = sessionStorage.getItem('token');
-
-//         const response = await axiosInstance.get(`/ofertas/findById/${idOferta}`);
-
-//         return response.data;
-//     } catch (error) {
-//         if (error.response && error.response.status === 404) {
-//             console.error('Oferta no encontrada');
-//             return null;
-//         } else {
-//             console.error('Error al obtener la oferta:', error);
-//             throw error;
-//         }
-//     }
-// };
-
-// export const editarOferta = async (ofertaData, idOferta) => {
-//     try {
-//         const response = await axiosInstance.put(`/edit/${idOferta}`, {
-//             // idOferta: ofertaData.idOferta,
-//             titulo: ofertaData.titulo,
-//             descripcion: ofertaData.titulo,
-//             condicion: ofertaData.condicion,
-//             ubicacion: ofertaData.ubicacion,
-//             imagenes: ofertaData.imagenes,
-//             idCategoria: ofertaData.idCategoria,
-//             idUsuario: ofertaData.idUsuario
-//         });
-//         return response.data;
-//     } catch (error) {
-//         console.log('Error al registrar la oferta', error);
-//         throw error;
-//     }
-// }
-
-// export const obtenerPorTitulo = async (titulo) => {
-//     try {
-//         const response = await axiosInstance.get(`/findByTitle/${titulo}`);
-//         return response.data;
-//     } catch (error) {
-//         if (error.response && error.response.status === 404) {
-//             console.error('Oferta no encontrada');
-//             return null;
-//         } else {
-//             console.error('Error al obtener la oferta:', error);
-//             throw error;
-//         }
-//     }
-// }
-
-// export const eliminar = async (idOferta) => {
-//     try {
-//         const response = await axiosInstance.delete(`/delete/${idOferta}`);
-//         return response.status == 200;
-//     } catch (error) {
-//         if (error.response && error.response.status === 404) {
-//             console.error('Oferta no encontrada');
-//             return null;
-//         } else {
-//             console.error('Error al borrar la oferta:', error);
-//             throw error;
-//         }
-//     }
-// }
