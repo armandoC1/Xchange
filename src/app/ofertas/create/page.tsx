@@ -15,8 +15,10 @@ interface FormData {
   condicion: string;
   ubicacion: string;
   idCategoria: number;
-  imagenes: string[]; // Almacenar imágenes en Base64
+  imagenes: string[]; 
 }
+
+const condicionesValidas = ['Nuevo', 'Usado', 'Buena condición', 'Reparado', 'Defectuoso'];
 
 export default function CrearOferta() {
   const router = useRouter();
@@ -32,7 +34,6 @@ export default function CrearOferta() {
   const [categorias, setCategorias] = useState<Categoria[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // Obtener categorías
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
@@ -79,7 +80,6 @@ export default function CrearOferta() {
     files.forEach((file) => {
       previews.push(URL.createObjectURL(file));
 
-      // Convertimos el archivo a Base64
       const reader = new FileReader();
       const base64Promise = new Promise<string>((resolve, reject) => {
         reader.onload = () => {
@@ -122,6 +122,77 @@ export default function CrearOferta() {
       return;
     }
 
+    // Validaciones adicionales
+    if (!formData.titulo.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'El título no puede estar vacío.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (formData.titulo.length > 100) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'El título no puede tener más de 100 caracteres.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.descripcion.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La descripción no puede estar vacía.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (formData.descripcion.length > 500) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La descripción no puede tener más de 500 caracteres.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (!condicionesValidas.includes(formData.condicion)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: `La condición debe ser una de las siguientes: ${condicionesValidas.join(', ')}.`,
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.ubicacion.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'La ubicación no puede estar vacía.',
+      });
+      setLoading(false);
+      return;
+    }
+
+    if (formData.idCategoria === 0) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Debe seleccionar una categoría válida.',
+      });
+      setLoading(false);
+      return;
+    }
+
     if (formData.imagenes.length === 0) {
       Swal.fire({
         icon: 'error',
@@ -148,7 +219,6 @@ export default function CrearOferta() {
       new Blob([JSON.stringify(ofertaData)], { type: 'application/json' })
     );
 
-    // Convierte Base64 a Blob y agrega cada imagen al FormData
     formData.imagenes.forEach((base64Image, index) => {
       const byteString = atob(base64Image.split(',')[1]);
       const mimeType = base64Image.split(',')[0].match(/:(.*?);/)![1];
@@ -243,16 +313,21 @@ export default function CrearOferta() {
                 <label htmlFor="condicion" className="block text-sm font-medium text-gray-700 mb-1">
                   Condición
                 </label>
-                <input
+                <select
                   id="condicion"
                   name="condicion"
-                  type="text"
                   required
                   value={formData.condicion}
                   onChange={handleChange}
                   className="appearance-none rounded-lg relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 sm:text-sm transition-all duration-200"
-                  placeholder="Condición del artículo"
-                />
+                >
+                  <option value="">Seleccione una condición</option>
+                  {condicionesValidas.map((condicion) => (
+                    <option key={condicion} value={condicion}>
+                      {condicion}
+                    </option>
+                  ))}
+                </select>
               </div>
             </div>
 

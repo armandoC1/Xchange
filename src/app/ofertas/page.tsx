@@ -18,20 +18,35 @@ interface Oferta {
 
 export default function OfertasPage() {
   const [ofertas, setOfertas] = useState<Oferta[]>([]);
-  const [page, setPage] = useState(1);
-  const [totalOfertas, setTotalOfertas] = useState(0);
+  const [page, setPage] = useState(1); 
+  const [totalOfertas, setTotalOfertas] = useState(0); 
   const [loading, setLoading] = useState(true);
   const limit = 5; 
-  const userId = parseInt(sessionStorage.getItem('idUsuario') || '0'); 
+  const [userId, setUserId] = useState<number>(0);
+
+  useEffect(() => {
+    const storedId = sessionStorage.getItem('idUsuario');
+    setUserId(parseInt(storedId || '0'));
+  }, []);
 
   useEffect(() => {
     const fetchOfertas = async () => {
       setLoading(true);
       try {
         const response = await listadoPaginado(page, limit);
-        const filteredOfertas = response.content.filter((oferta: Oferta) => oferta.idUsuario !== userId);
-        setOfertas(filteredOfertas);
-        setTotalOfertas(response.totalElements - filteredOfertas.length); 
+        console.log('Backend response:', response);
+
+        if (response && response.content) {
+
+          const filteredOfertas = response.content.filter(
+            (oferta: Oferta) => oferta.idUsuario !== userId
+          );
+          setOfertas(filteredOfertas); 
+          setTotalOfertas(filteredOfertas.length > 0 ? response.totalElements - 1 : response.totalElements); // Ajuste dinámico del total
+        } else {
+          setOfertas([]);
+          setTotalOfertas(0);
+        }
       } catch (error) {
         console.error('Error al cargar las ofertas:', error);
         Swal.fire({
@@ -39,7 +54,7 @@ export default function OfertasPage() {
           title: 'Error',
           text: 'No se pudieron cargar las ofertas',
           background: '#fff',
-          confirmButtonColor: '#3B82F6'
+          confirmButtonColor: '#3B82F6',
         });
       } finally {
         setLoading(false);
@@ -49,15 +64,15 @@ export default function OfertasPage() {
     fetchOfertas();
   }, [page, userId]);
 
-  const totalPages = Math.ceil(totalOfertas / limit);
+  const totalPages = Math.ceil(totalOfertas / limit); 
 
   const handleNextPage = () => {
     if (page < totalPages) {
-      setPage(prevPage => prevPage + 1);
+      setPage((prevPage) => prevPage + 1);
     }
   };
 
-  const handlePreviousPage = () => setPage(prevPage => Math.max(prevPage - 1, 1));
+  const handlePreviousPage = () => setPage((prevPage) => Math.max(prevPage - 1, 1));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -82,7 +97,7 @@ export default function OfertasPage() {
           </div>
         ) : ofertas.length > 0 ? (
           <div className="space-y-6">
-            {ofertas.map(oferta => (
+            {ofertas.map((oferta) => (
               <div
                 key={oferta.idOferta}
                 className="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1"
@@ -144,25 +159,27 @@ export default function OfertasPage() {
           </div>
         )}
 
-        <div className="mt-8 flex justify-center items-center space-x-4">
-          <button
-            onClick={handlePreviousPage}
-            disabled={page === 1}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Anterior
-          </button>
-          <span className="text-sm text-gray-700">
-            Página {page} de {totalPages}
-          </span>
-          <button
-            onClick={handleNextPage}
-            disabled={page >= totalPages}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            Siguiente
-          </button>
-        </div>
+        {totalPages > 1 && (
+          <div className="mt-8 flex justify-center items-center space-x-4">
+            <button
+              onClick={handlePreviousPage}
+              disabled={page === 1}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+            <span className="text-sm text-gray-700">
+              Página {page} de {totalPages}
+            </span>
+            <button
+              onClick={handleNextPage}
+              disabled={page >= totalPages}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
