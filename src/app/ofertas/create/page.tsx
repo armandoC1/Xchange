@@ -162,7 +162,7 @@ export default function CrearOferta() {
     });
 
     try {
-      const res = await fetch('http://localhost:8080/ofertas/save', {
+      const res = await fetch('http://3.137.192.224:8080/ofertas/save', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
