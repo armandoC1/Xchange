@@ -23,8 +23,7 @@ export default function Login() {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    console.log('Datos que se enviarán:', credentials);
+    e.preventDefault()
     try {
       const res = await fetch('http://3.137.192.224:8080/usuarios/login', {
         method: 'POST',

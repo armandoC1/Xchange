@@ -1,7 +1,6 @@
 
 import axiosInstance from './axiosInstance';
 
-//ya funciona
 export const login = async (correo_electronico, contrasena) => {
   try {
     const response = await axiosInstance.post('/usuarios/login', {
@@ -19,7 +18,6 @@ export const login = async (correo_electronico, contrasena) => {
   }
 };
 
-//ya funciona
 export const register = async (usuarioData) => {
   try {
     const response = await axiosInstance.post('/usuarios/registro', {

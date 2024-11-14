@@ -43,7 +43,7 @@ export default function OfertaDetallesPage() {
                     const data = await obtenerPorId(id);
                     sessionStorage.setItem('idOferta', id.toString());
                     setOferta(data);
-                    
+
                     if (data.idUsuario) {
                         const usuario = await obtenerUsuarioPorId(data.idUsuario);
                         sessionStorage.setItem('idDestinatario', data.idUsuario);
@@ -69,13 +69,16 @@ export default function OfertaDetallesPage() {
     }, [id]);
 
     const nextImage = () => {
-        setCurrentImageIndex((prev) => 
-            prev === oferta?.imagenes.length - 1 ? 0 : prev + 1
+        if (!oferta || !oferta.imagenes || oferta.imagenes.length === 0) {
+            return;
+        }
+        setCurrentImageIndex((prev) =>
+            prev === oferta.imagenes.length - 1 ? 0 : prev + 1
         );
     };
 
     const prevImage = () => {
-        setCurrentImageIndex((prev) => 
+        setCurrentImageIndex((prev) =>
             prev === 0 ? (oferta?.imagenes.length ?? 1) - 1 : prev - 1
         );
     };
@@ -98,14 +101,14 @@ export default function OfertaDetallesPage() {
                                     />
                                     {oferta.imagenes.length > 1 && (
                                         <>
-                                            <button 
+                                            <button
                                                 onClick={prevImage}
                                                 className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all transform hover:scale-110"
                                                 aria-label="Imagen anterior"
                                             >
                                                 <ChevronLeft className="w-6 h-6" />
                                             </button>
-                                            <button 
+                                            <button
                                                 onClick={nextImage}
                                                 className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 text-white p-3 rounded-full transition-all transform hover:scale-110"
                                                 aria-label="Siguiente imagen"
@@ -116,11 +119,10 @@ export default function OfertaDetallesPage() {
                                                 {oferta.imagenes.map((_, index) => (
                                                     <div
                                                         key={index}
-                                                        className={`w-2.5 h-2.5 rounded-full transition-all ${
-                                                            index === currentImageIndex 
-                                                                ? 'bg-white scale-125' 
-                                                                : 'bg-white/50 hover:bg-white/75'
-                                                        }`}
+                                                        className={`w-2.5 h-2.5 rounded-full transition-all ${index === currentImageIndex
+                                                            ? 'bg-white scale-125'
+                                                            : 'bg-white/50 hover:bg-white/75'
+                                                            }`}
                                                     />
                                                 ))}
                                             </div>
@@ -135,13 +137,13 @@ export default function OfertaDetallesPage() {
                             <h1 className="text-3xl font-bold text-gray-900 mb-6">
                                 {oferta.titulo}
                             </h1>
-                            
+
                             <div className="space-y-6 mb-8">
                                 <div className="bg-gray-50 p-6 rounded-xl">
                                     <h2 className="font-semibold text-gray-900 mb-3">Descripción</h2>
                                     <p className="text-gray-600 leading-relaxed">{oferta.descripcion}</p>
                                 </div>
-                                
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl transition-all hover:bg-gray-100">
                                         <Package2 className="w-5 h-5 text-primary" />

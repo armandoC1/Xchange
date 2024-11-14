@@ -1,6 +1,5 @@
 import axiosInstance from './axiosInstance';
 
-//ya funciona
 export const obtenerTodasCategorias = async (page = 1, limit = 10) => {
     try {
         const response = await axiosInstance.get('/categorias/listPage', {
@@ -19,7 +18,6 @@ export const obtenerTodasCategorias = async (page = 1, limit = 10) => {
     }
 };
 
-//ya funciona
 export const mostrarCategorias = async () => {
     try {
         const response = await axiosInstance.get('/categorias/list')
@@ -30,7 +28,6 @@ export const mostrarCategorias = async () => {
     }
 }
 
-//funciona
 export const crearCategoria = async (categoria) => {
     try {
         const response = await axiosInstance.post('/categorias/save', categoria);
@@ -41,7 +38,6 @@ export const crearCategoria = async (categoria) => {
     }
 };
 
-//funciona
 export const eliminarCategoria = async (id) => {
     try {
         const response = await axiosInstance.delete(`/categorias/delete/${id}`);

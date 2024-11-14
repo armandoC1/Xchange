@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { obtenerTodasCategorias, eliminarCategoria } from '../services/categoriaService';
 import Swal from 'sweetalert2';
-import { 
+import {
   Boxes,
   Laptop,
   Smartphone,
@@ -25,7 +25,6 @@ interface Categoria {
   nombre: string;
 }
 
-// Definir un tipo específico para los iconos que acepta className como prop opcional
 const categoryIcons: { [key: string]: React.FC<{ className?: string }> } = {
   'Electrónica': Laptop,
   'Móviles': Smartphone,
