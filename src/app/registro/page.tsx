@@ -4,19 +4,20 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, Mail, Lock, Phone, MapPin, Upload, UserCircle } from 'lucide-react';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
 
 interface FormData {
-  nombre: string
-  correo: string
-  contrasena: string
-  numeroTelefono: string
-  ubicacion: string
-  idRol: number
-  fotoPerfil: File | null
+  nombre: string;
+  correo: string;
+  contrasena: string;
+  numeroTelefono: string;
+  ubicacion: string;
+  idRol: number;
+  fotoPerfil: File | null;
 }
 
 export default function Registro() {
-  const router = useRouter()
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     nombre: '',
     correo: '',
@@ -25,30 +26,30 @@ export default function Registro() {
     ubicacion: '',
     idRol: 1,
     fotoPerfil: null,
-  })
-  const [previewUrl, setPreviewUrl] = useState<string>('')
+  });
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: name === 'idRol' ? parseInt(value) : value,
-    })
-  }
+    });
+  };
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
+    const file = e.target.files?.[0];
     if (file) {
-      setFormData({ ...formData, fotoPerfil: file })
-      const url = URL.createObjectURL(file)
-      setPreviewUrl(url)
+      setFormData({ ...formData, fotoPerfil: file });
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
     }
-  }
+  };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const formDataToSend = new FormData()
+    const formDataToSend = new FormData();
 
     const usuarioData = {
       nombre: formData.nombre,
@@ -57,31 +58,49 @@ export default function Registro() {
       numeroTelefono: formData.numeroTelefono,
       ubicacion: formData.ubicacion,
       idRol: formData.idRol,
-    }
+    };
 
-    formDataToSend.append('usuario', new Blob([JSON.stringify(usuarioData)], { type: 'application/json' }))
+    formDataToSend.append('usuario', new Blob([JSON.stringify(usuarioData)], { type: 'application/json' }));
 
     if (formData.fotoPerfil) {
-      formDataToSend.append('fotoPerfil', formData.fotoPerfil)
+      formDataToSend.append('fotoPerfil', formData.fotoPerfil);
     }
 
     try {
       const res = await fetch('http://3.137.192.224:8080/usuarios/registro', {
         method: 'POST',
         body: formDataToSend,
-      })
+      });
 
       if (res.ok) {
-        alert('Registro exitoso. Redirigiendo al inicio de sesión.')
-        router.push('/login')
+        // Mostrar alerta de "Redirigiendo..."
+        Swal.fire({
+          title: 'Registro exitoso',
+          text: 'Redirigiendo al inicio de sesión...',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 2000, // Duración de la alerta en milisegundos
+          willClose: () => {
+            router.push('/login');
+          },
+        });
       } else {
-        const errorData = await res.text()
-        alert(`Error: ${errorData}`)
+        const errorData = await res.text();
+        Swal.fire({
+          title: 'Error',
+          text: `Error: ${errorData}`,
+          icon: 'error',
+        });
       }
     } catch (error) {
-      console.error('Error al registrar:', error)
+      console.error('Error al registrar:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Ocurrió un error al registrar. Por favor, inténtalo de nuevo más tarde.',
+        icon: 'error',
+      });
     }
-  }
+  };
 
   return (
     

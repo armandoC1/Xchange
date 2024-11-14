@@ -4,26 +4,27 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Mail, Lock, LogIn } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 type Credentials = {
-  correo: string
-  contrasena: string
-}
+  correo: string;
+  contrasena: string;
+};
 
 export default function Login() {
-  const router = useRouter()
+  const router = useRouter();
   const [credentials, setCredentials] = useState<Credentials>({
     correo: '',
     contrasena: '',
-  })
+  });
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCredentials({ ...credentials, [e.target.name]: e.target.value })
-  }
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault()
-    console.log('Datos que se enviarán:', credentials)
+    e.preventDefault();
+    console.log('Datos que se enviarán:', credentials);
     try {
       const res = await fetch('http://3.137.192.224:8080/usuarios/login', {
         method: 'POST',
@@ -31,36 +32,58 @@ export default function Login() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
-      })
+      });
 
-      console.log('Estado de la respuesta:', res.status, res.statusText)
-      const contentType = res.headers.get('Content-Type')
-      console.log('Content-Type de la respuesta:', contentType)
+      console.log('Estado de la respuesta:', res.status, res.statusText);
+      const contentType = res.headers.get('Content-Type');
+      console.log('Content-Type de la respuesta:', contentType);
 
-      const responseText = await res.text()
-      console.log('Cuerpo de la respuesta:', responseText)
+      const responseText = await res.text();
+      console.log('Cuerpo de la respuesta:', responseText);
 
       if (res.ok) {
         try {
-          const data = JSON.parse(responseText)
-          sessionStorage.setItem('token', data.token)
-          sessionStorage.setItem('idUsuario', data.idUsuario)
-          console.log('id desde login: ', data.idUsuario)
-          alert('Inicio de sesión exitoso.')
-          router.push('/')
+          const data = JSON.parse(responseText);
+          sessionStorage.setItem('token', data.token);
+          sessionStorage.setItem('idUsuario', data.idUsuario);
+          console.log('id desde login: ', data.idUsuario);
+
+          // Mostrar alerta de redirección sin botón de confirmación
+          Swal.fire({
+            title: 'Inicio de sesión exitoso',
+            text: 'Redirigiendo al inicio...',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 3000, // La alerta se cerrará automáticamente después de 2 segundos
+            willClose: () => {
+              router.push('/');
+            },
+          });
         } catch (parseError) {
-          console.error('Error al parsear JSON:', parseError)
-          alert('Error al procesar la respuesta del servidor.')
+          console.error('Error al parsear JSON:', parseError);
+          Swal.fire({
+            title: 'Error',
+            text: 'Error al procesar la respuesta del servidor.',
+            icon: 'error',
+          });
         }
       } else {
-        console.error(`Error ${res.status}: ${res.statusText}`)
-        alert(`Error ${res.status}: ${res.statusText}`)
+        console.error(`Error ${res.status}: ${res.statusText}`);
+        Swal.fire({
+          title: `Error ${res.status}`,
+          text: res.statusText,
+          icon: 'error',
+        });
       }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error)
-      alert('Error al iniciar sesión. Por favor, intenta de nuevo.')
+      console.error('Error al iniciar sesión:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'Error al iniciar sesión. Por favor, intenta de nuevo.',
+        icon: 'error',
+      });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 via-purple-50 to-violet-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -130,5 +153,5 @@ export default function Login() {
         </form>
       </div>
     </div>
-  )
+  );
 }

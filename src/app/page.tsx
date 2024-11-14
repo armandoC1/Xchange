@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { ArrowRight, RefreshCcw, Users, Star } from 'lucide-react'
+import Swal from 'sweetalert2'
 
 export default function HomePage() {
   const router = useRouter()
@@ -12,17 +13,22 @@ export default function HomePage() {
     const token = sessionStorage.getItem('token')
 
     if (!token) {
-      alert('Debes iniciar sesion para acceder')
-      router.replace('/login')
+      Swal.fire({
+        title: 'Acceso Denegado',
+        text: 'Debes iniciar sesión para acceder a esta página.',
+        icon: 'warning',
+        confirmButtonText: 'Iniciar Sesión',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      }).then(() => {
+        router.replace('/login')
+      })
     }
   }, [router])
-  
 
   return (
     <div className="min-h-screen flex flex-col">
-
-
-      {/* Hero Section */}
+      {/* Sección Hero */}
       <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
           <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
@@ -43,7 +49,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      {/* Feature Section */}
+      {/* Sección de Características */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 bg-white">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
           <div className="relative p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300">
