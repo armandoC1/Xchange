@@ -128,7 +128,7 @@ const MessagePage = () => {
         try {
             await sendMessage(messageData);
             setContenidoMensaje('');
-            fetchMessages(userId, recipientId); 
+            fetchMessages(userId, recipientId);
         } catch (err) {
             console.error('Error al mandar mensaje:', err);
             setError('Hubo un error al enviar el mensaje. Inténtalo nuevamente.');
@@ -158,9 +158,8 @@ const MessagePage = () => {
                         <button
                             key={conversation.id}
                             onClick={() => handleSelectConversation(conversation.id)}
-                            className={`p-2 rounded-lg ${
-                                recipientId === conversation.id ? 'bg-blue-300' : 'bg-blue-100'
-                            } mb-2 text-blue-800`}
+                            className={`p-2 rounded-lg ${recipientId === conversation.id ? 'bg-blue-300' : 'bg-blue-100'
+                                } mb-2 text-blue-800`}
                         >
                             Conversación con {conversation.name}
                         </button>
@@ -170,13 +169,12 @@ const MessagePage = () => {
                 <div className="max-h-80 overflow-y-auto space-y-3">
                     {messages.length > 0 ? (
                         messages.map((message) => (
-                            <div 
-                                key={message.id} 
-                                className={`p-3 rounded-lg shadow-md ${
-                                    message.idRemitente === userId 
-                                        ? 'bg-blue-200 text-right animate-fade-in-right' 
+                            <div
+                                key={message.id}
+                                className={`p-3 rounded-lg shadow-md ${message.idRemitente === userId
+                                        ? 'bg-blue-200 text-right animate-fade-in-right'
                                         : 'bg-gray-200 text-left animate-fade-in-left'
-                                }`}
+                                    }`}
                             >
                                 <p className="font-semibold">{message.contenidoMensaje}</p>
                                 <p className="text-sm text-gray-600">{new Date(message.fechaEnvio).toLocaleString()}</p>
@@ -195,8 +193,8 @@ const MessagePage = () => {
                     onChange={(e) => setContenidoMensaje(e.target.value)}
                     placeholder="Escribe tu mensaje aquí..."
                 />
-                <button 
-                    onClick={handleSendMessage} 
+                <button
+                    onClick={handleSendMessage}
                     className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition transform active:scale-95"
                 >
                     Enviar mensaje

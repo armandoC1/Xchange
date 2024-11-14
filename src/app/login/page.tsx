@@ -23,7 +23,6 @@ export default function Login() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    console.log('Datos que se enviarán:', credentials)
     try {
       const res = await fetch('http://3.137.192.224:8080/usuarios/login', {
         method: 'POST',
@@ -33,19 +32,15 @@ export default function Login() {
         body: JSON.stringify(credentials),
       })
 
-      console.log('Estado de la respuesta:', res.status, res.statusText)
       const contentType = res.headers.get('Content-Type')
-      console.log('Content-Type de la respuesta:', contentType)
 
       const responseText = await res.text()
-      console.log('Cuerpo de la respuesta:', responseText)
 
       if (res.ok) {
         try {
           const data = JSON.parse(responseText)
           sessionStorage.setItem('token', data.token)
           sessionStorage.setItem('idUsuario', data.idUsuario)
-          console.log('id desde login: ', data.idUsuario)
           alert('Inicio de sesión exitoso.')
           router.push('/')
         } catch (parseError) {

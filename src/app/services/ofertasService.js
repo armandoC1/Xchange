@@ -1,30 +1,26 @@
 import axiosInstance from "./axiosInstance";
 
-//HOLA MUNDO 
-
-//ya esta
 export const listadoPaginado = async (page = 1, limit = 10) => {
     try {
-      const response = await axiosInstance.get('/ofertas/listPage', {
-        params: {
-          page: page - 1, // Pagina basada en índice 0 para el backend
-          size: limit, // Límite de registros por página
-        },
-      });
-  
-      // Validar si hay datos en la respuesta
-      if (!response.data || !response.data.content) {
-        console.warn('No hay ofertas disponibles.');
-        return { content: [], totalElements: 0, totalPages: 0 };
-      }
-  
-      return response.data;
+        const response = await axiosInstance.get('/ofertas/listPage', {
+            params: {
+                page: page - 1,
+                size: limit,
+            },
+        });
+
+        if (!response.data || !response.data.content) {
+            console.warn('No hay ofertas disponibles.');
+            return { content: [], totalElements: 0, totalPages: 0 };
+        }
+
+        return response.data;
     } catch (error) {
-      console.error('Error al cargar las ofertas:', error);
-      throw new Error('Error al conectar con el servidor.');
+        console.error('Error al cargar las ofertas:', error);
+        throw new Error('Error al conectar con el servidor.');
     }
-  };
-  
+};
+
 
 //ya funciona
 export const obtenerPorId = async (idOferta) => {
@@ -46,9 +42,9 @@ export const obtenerPorId = async (idOferta) => {
 };
 
 //modificado para estar similar al de guardar oferta
- export const editarOferta = async (ofertaData, idOferta) => {
-     try {
-         const response = await axiosInstance.put(`/edit/${idOferta}`, {
+export const editarOferta = async (ofertaData, idOferta) => {
+    try {
+        const response = await axiosInstance.put(`/edit/${idOferta}`, {
             oferta: {
                 titulo: ofertaData.titulo,
                 descripcion: ofertaData.descripcion,
@@ -58,37 +54,34 @@ export const obtenerPorId = async (idOferta) => {
                 idCategoria: ofertaData.idCategoria,
                 idUsuario: ofertaData.idUsuario
             }
-         });
-         return response.data;
-     } catch (error) {
-         console.error('Error al registrar la oferta', error);
-         throw error;
-     }
- }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error al registrar la oferta', error);
+        throw error;
+    }
+}
 
- export const guardarOferta = async (ofertaData) => {
-     try {
-        console.log('imagenes')
-        console.log(ofertaData.imagenes)
-        console.log(ofertaData)
+export const guardarOferta = async (ofertaData) => {
+    try {
         const respónse = await axiosInstance.post('/ofertas/save', {
             oferta: {
                 titulo: ofertaData.titulo,
                 descripcion: ofertaData.descripcion,
                 condicion: ofertaData.condicion,
                 ubicacion: ofertaData.ubicacion,
-                imagenes: ofertaData.imagenes, 
+                imagenes: ofertaData.imagenes,
                 idUsuario: ofertaData.idUsuario
-                
+
             }
         })
-  
+
         return response.data
-     } catch (error) {
-         console.error('Error al registrar ofertas: ', error)
-         throw error
-     }
- }
+    } catch (error) {
+        console.error('Error al registrar ofertas: ', error)
+        throw error
+    }
+}
 
 // aun no
 export const obtenerPorTitulo = async (titulo) => {

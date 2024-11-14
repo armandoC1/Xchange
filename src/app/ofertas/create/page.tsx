@@ -15,7 +15,7 @@ interface FormData {
   condicion: string;
   ubicacion: string;
   idCategoria: number;
-  imagenes: string[]; 
+  imagenes: string[];
 }
 
 const condicionesValidas = ['Nuevo', 'Usado', 'Buena condición', 'Reparado', 'Defectuoso'];
@@ -122,7 +122,6 @@ export default function CrearOferta() {
       return;
     }
 
-    // Validaciones adicionales
     if (!formData.titulo.trim()) {
       Swal.fire({
         icon: 'error',

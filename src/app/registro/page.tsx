@@ -84,7 +84,7 @@ export default function Registro() {
   }
 
   return (
-    
+
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-pink-50 via-purple-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl w-full space-y-8 bg-white/80 backdrop-blur-sm p-8 rounded-xl shadow-lg border border-purple-100">
         <div className="text-center">
@@ -257,6 +257,6 @@ export default function Registro() {
         </form>
       </div>
     </div>
-    
+
   )
 }

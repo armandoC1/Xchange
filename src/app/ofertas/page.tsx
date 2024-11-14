@@ -18,10 +18,10 @@ interface Oferta {
 
 export default function OfertasPage() {
   const [ofertas, setOfertas] = useState<Oferta[]>([]);
-  const [page, setPage] = useState(1); 
-  const [totalOfertas, setTotalOfertas] = useState(0); 
+  const [page, setPage] = useState(1);
+  const [totalOfertas, setTotalOfertas] = useState(0);
   const [loading, setLoading] = useState(true);
-  const limit = 5; 
+  const limit = 5;
   const [userId, setUserId] = useState<number>(0);
 
   useEffect(() => {
@@ -41,7 +41,7 @@ export default function OfertasPage() {
           const filteredOfertas = response.content.filter(
             (oferta: Oferta) => oferta.idUsuario !== userId
           );
-          setOfertas(filteredOfertas); 
+          setOfertas(filteredOfertas);
           setTotalOfertas(filteredOfertas.length > 0 ? response.totalElements - 1 : response.totalElements); // Ajuste dinámico del total
         } else {
           setOfertas([]);
@@ -64,7 +64,7 @@ export default function OfertasPage() {
     fetchOfertas();
   }, [page, userId]);
 
-  const totalPages = Math.ceil(totalOfertas / limit); 
+  const totalPages = Math.ceil(totalOfertas / limit);
 
   const handleNextPage = () => {
     if (page < totalPages) {

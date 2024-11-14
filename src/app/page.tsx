@@ -16,11 +16,10 @@ export default function HomePage() {
       router.replace('/login')
     }
   }, [router])
-  
+
 
   return (
     <div className="min-h-screen flex flex-col">
-
 
       {/* Hero Section */}
       <div className="relative overflow-hidden bg-gradient-to-r from-blue-500 to-purple-600">
