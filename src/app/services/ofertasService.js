@@ -86,7 +86,7 @@ export const guardarOferta = async (ofertaData) => {
 // aun no
 export const obtenerPorTitulo = async (titulo) => {
     try {
-        const response = await axiosInstance.get(`/findByTitle/${titulo}`);
+        const response = await axiosInstance.get(`/ofertas/findByTitle/${titulo}`);
         return response.data;
     } catch (error) {
         if (error.response && error.response.status === 404) {

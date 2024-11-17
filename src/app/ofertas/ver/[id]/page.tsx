@@ -71,7 +71,7 @@ export default function OfertaDetallesPage() {
 
         try {
             const data = await obtenerPorId(id);
-            sessionStorage.setItem('idOferta', id.toString());
+            sessionStorage.setItem('idOferta', data.idOferta);
             setOferta(data);
 
             if (data.idUsuario) {

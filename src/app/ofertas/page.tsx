@@ -1,8 +1,8 @@
-'use client';
-
+"use client"
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { listadoPaginado } from '../services/ofertasService';
+import { listadoPaginado, obtenerPorTitulo } from '../services/ofertasService';
+import { mostrarCategorias } from '../services/categoriaService';
 import Swal from 'sweetalert2';
 
 interface Oferta {
@@ -16,11 +16,19 @@ interface Oferta {
   idUsuario: number;
 }
 
+interface Categoria {
+  id: number;
+  nombre: string;
+}
+
 export default function OfertasPage() {
   const [ofertas, setOfertas] = useState<Oferta[]>([]);
   const [page, setPage] = useState(1);
   const [totalOfertas, setTotalOfertas] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const limit = 5;
   const [userId, setUserId] = useState<number>(0);
 
@@ -30,39 +38,75 @@ export default function OfertasPage() {
   }, []);
 
   useEffect(() => {
+    const fetchCategorias = async () => {
+      try {
+        const response = await mostrarCategorias();
+        setCategorias(response);
+      } catch (error) {
+        console.error('Error al cargar las categorías:', error);
+      }
+    };
+
+    fetchCategorias();
+  }, []);
+
+  useEffect(() => {
     const fetchOfertas = async () => {
       setLoading(true);
       try {
-        const response = await listadoPaginado(page, limit);
-        console.log('Backend response:', response);
-
-        if (response && response.content) {
-
-          const filteredOfertas = response.content.filter(
-            (oferta: Oferta) => oferta.idUsuario !== userId
-          );
-          setOfertas(filteredOfertas);
-          setTotalOfertas(filteredOfertas.length > 0 ? response.totalElements - 1 : response.totalElements); // Ajuste dinámico del total
+        let response;
+        if (searchTerm) {
+          response = await obtenerPorTitulo(searchTerm);
+          if (response && Array.isArray(response)) {
+            const filteredOfertas = response.filter(
+              (oferta: Oferta) =>
+                oferta.idUsuario !== userId &&
+                (!selectedCategory || oferta.idCategoria === selectedCategory)
+            );
+            setOfertas(filteredOfertas);
+            setTotalOfertas(filteredOfertas.length);
+          } else {
+            setOfertas([]);
+            setTotalOfertas(0);
+            Swal.fire({
+              icon: 'warning',
+              title: 'Sin resultados',
+              text: 'No hay ofertas disponibles que coincidan con tu búsqueda.',
+              background: '#fff',
+              confirmButtonColor: '#3B82F6',
+            });
+          }
         } else {
-          setOfertas([]);
-          setTotalOfertas(0);
+          response = await listadoPaginado(page, limit);
+          if (response && response.content) {
+            const filteredOfertas = response.content.filter(
+              (oferta: Oferta) =>
+                oferta.idUsuario !== userId &&
+                (!selectedCategory || oferta.idCategoria === selectedCategory)
+            );
+            setOfertas(filteredOfertas);
+            setTotalOfertas(response.totalElements);
+          } else {
+            setOfertas([]);
+            setTotalOfertas(0);
+            Swal.fire({
+              icon: 'warning',
+              title: 'Sin resultados',
+              text: 'No hay ofertas disponibles.',
+              background: '#fff',
+              confirmButtonColor: '#3B82F6',
+            });
+          }
         }
       } catch (error) {
         console.error('Error al cargar las ofertas:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudieron cargar las ofertas',
-          background: '#fff',
-          confirmButtonColor: '#3B82F6',
-        });
       } finally {
         setLoading(false);
       }
     };
 
     fetchOfertas();
-  }, [page, userId]);
+  }, [page, userId, searchTerm, selectedCategory]);
 
   const totalPages = Math.ceil(totalOfertas / limit);
 
@@ -72,7 +116,9 @@ export default function OfertasPage() {
     }
   };
 
-  const handlePreviousPage = () => setPage((prevPage) => Math.max(prevPage - 1, 1));
+  const handlePreviousPage = () => {
+    setPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -86,6 +132,34 @@ export default function OfertasPage() {
               Crear Nueva Oferta
             </button>
           </Link>
+        </div>
+
+        <div className="mb-6 flex gap-4">
+          <input
+            type="text"
+            placeholder="Buscar por título..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <select
+            value={selectedCategory || ''}
+            onChange={(e) => setSelectedCategory(Number(e.target.value) || null)}
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          >
+            <option value="">Todas las categorías</option>
+            {categorias.map((categoria) => (
+              <option key={categoria.id} value={categoria.id}>
+                {categoria.nombre}
+              </option>
+            ))}
+          </select>
+          {/* <button
+            onClick={() => setPage(1)}
+            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Buscar
+          </button> */}
         </div>
 
         {loading ? (
@@ -159,7 +233,7 @@ export default function OfertasPage() {
           </div>
         )}
 
-        {totalPages > 1 && (
+        {totalPages > 1 && !searchTerm && (
           <div className="mt-8 flex justify-center items-center space-x-4">
             <button
               onClick={handlePreviousPage}

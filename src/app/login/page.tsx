@@ -33,27 +33,20 @@ export default function Login() {
         body: JSON.stringify(credentials),
       });
 
-      console.log('Estado de la respuesta:', res.status, res.statusText);
       const contentType = res.headers.get('Content-Type');
-      console.log('Content-Type de la respuesta:', contentType);
-
       const responseText = await res.text();
-      console.log('Cuerpo de la respuesta:', responseText);
 
       if (res.ok) {
         try {
           const data = JSON.parse(responseText);
           sessionStorage.setItem('token', data.token);
           sessionStorage.setItem('idUsuario', data.idUsuario);
-          console.log('id desde login: ', data.idUsuario);
-
-          // Mostrar alerta de redirección sin botón de confirmación
           Swal.fire({
             title: 'Inicio de sesión exitoso',
             text: 'Redirigiendo al inicio...',
             icon: 'success',
             showConfirmButton: false,
-            timer: 3000, // La alerta se cerrará automáticamente después de 2 segundos
+            timer: 3000, 
             willClose: () => {
               router.push('/');
             },
@@ -69,8 +62,8 @@ export default function Login() {
       } else {
         console.error(`Error ${res.status}: ${res.statusText}`);
         Swal.fire({
-          title: `Error ${res.status}`,
-          text: res.statusText,
+          title: `Credenciales inválidas. Intente de nuevo.`,
+          text: "",
           icon: 'error',
         });
       }
