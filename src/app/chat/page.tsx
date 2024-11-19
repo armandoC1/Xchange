@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { MessageCircle, Send, ChevronLeft, User } from "lucide-react";
 import { getGroupedMessages, sendMessage } from "@/app/services/chatService";
 import { obtenerUsuarioPorId } from "@/app/services/usuarioService";
+import { useRouter } from "next/navigation";
 
 interface Message {
   id: number;
@@ -21,6 +22,7 @@ interface Conversation {
 }
 
 export default function MessagesPage() {
+  const router = useRouter();
   const [userId, setUserId] = useState<number | null>(null);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<Conversation | null>(null);
@@ -28,6 +30,7 @@ export default function MessagesPage() {
   const [newMessage, setNewMessage] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isMobileView, setIsMobileView] = useState(false);
+  const [isSolicitante, setIsSolicitante] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const shouldScrollRef = useRef(true);
 
@@ -75,14 +78,16 @@ export default function MessagesPage() {
       const conversationsData: Conversation[] = [];
 
       for (const [recipientId, messages] of Object.entries(data[userId] || {})) {
-        const lastMessage = messages[messages.length - 1];
-        const userData = await obtenerUsuarioPorId(parseInt(recipientId));
-        conversationsData.push({
-          id: parseInt(recipientId),
-          name: userData.nombre || `Usuario ${recipientId}`,
-          lastMessage: lastMessage.contenidoMensaje,
-          lastMessageDate: lastMessage.fechaEnvio,
-        });
+        if (Array.isArray(messages)) {
+          const lastMessage = messages[messages.length - 1];
+          const userData = await obtenerUsuarioPorId(parseInt(recipientId));
+          conversationsData.push({
+            id: parseInt(recipientId),
+            name: userData?.nombre || `Usuario ${recipientId}`,
+            lastMessage: lastMessage?.contenidoMensaje || "Mensaje no disponible",
+            lastMessageDate: lastMessage?.fechaEnvio || null,
+          });
+        }
       }
 
       setConversations(conversationsData);
@@ -103,10 +108,35 @@ export default function MessagesPage() {
       );
 
       setMessages(allMessages);
+
+      if (allMessages.length > 0) {
+        determineAndStoreParticipants(allMessages);
+      }
     } catch (error) {
       console.error("Error al obtener mensajes:", error);
       setError("Error al cargar los mensajes.");
     }
+  };
+
+  const determineAndStoreParticipants = (messages: Message[]) => {
+    if (messages.length === 0) return;
+
+    const sortedMessages = [...messages].sort(
+      (a, b) => new Date(a.fechaEnvio).getTime() - new Date(b.fechaEnvio).getTime()
+    );
+
+    const firstMessage = sortedMessages[0];
+    const idSolicitante = firstMessage.idRemitente;
+    const idDestinatario = firstMessage.idDestinatario;
+    
+    sessionStorage.setItem("idSolicitante", idSolicitante.toString())
+    sessionStorage.setItem("idDestinatario", idDestinatario.toString())
+
+    setIsSolicitante(userId === idSolicitante);
+
+    console.log(
+      `Participantes almacenados: Solicitante(${idSolicitante}), Destinatario(${idDestinatario})`
+    );
   };
 
   const handleSendMessage = async () => {
@@ -198,6 +228,15 @@ export default function MessagesPage() {
                 </button>
               )}
               <h2 className="text-xl  text-blue-400 font-semibold">{selectedConversation.name}</h2>
+              {isSolicitante && (
+                // boton para mandar a crear solicitud
+                <button
+                  onClick={() => router.push(`/solicitudes/crear`)}
+                  className="ml-auto bg-green-500 text-white rounded-full px-4 py-2 hover:bg-green-600"
+                >
+                  Mandar Solicitud
+                </button>
+              )}
             </div>
             <div
               className="flex-1 overflow-y-auto p-4 space-y-4"
@@ -209,11 +248,10 @@ export default function MessagesPage() {
                   className={`flex ${message.idRemitente === userId ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                      message.idRemitente === userId
+                    className={`max-w-[70%] rounded-lg px-4 py-2 ${message.idRemitente === userId
                         ? "bg-blue-500 text-white"
                         : "bg-white text-gray-900"
-                    }`}
+                      }`}
                   >
                     <p>{message.contenidoMensaje}</p>
                     <p className="text-xs mt-1 opacity-75">{formatDate(message.fechaEnvio)}</p>

@@ -48,6 +48,12 @@ export const NavBar = () => {
             >
               Mensajes
             </Link>
+            <Link
+              href="/solicitudes"
+              className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
+            >
+              Solicitudes
+            </Link>
 
           </div>
         </div>
