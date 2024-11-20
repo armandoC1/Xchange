@@ -220,11 +220,11 @@ export default function MessagesPage() {
           <>
             <div className="bg-white p-4 border-b flex items-center">
               {isMobileView && (
-                <button
+                <button 
                   className="mr-4"
                   onClick={() => setSelectedConversation(null)}
                 >
-                  <ChevronLeft size={24} />
+                  <ChevronLeft size={24} color="black" />
                 </button>
               )}
               <h2 className="text-xl  text-blue-400 font-semibold">{selectedConversation.name}</h2>
