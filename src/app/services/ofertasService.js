@@ -115,6 +115,67 @@ export const eliminar = async (idOferta) => {
     }
 };
 
+export const obtenerOfertasPorUsuario = async (userId) => {
+    try {
+        const response = await axiosInstance.get(`/ofertas/misOfertas`, {
+            params: {
+                userId,
+            },
+        });
+
+        return response.data;
+    } catch (error) {
+        if (error.response && error.response.status === 403) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Acceso denegado',
+                text: 'No tienes permiso para acceder a este recurso.',
+            });
+        } else {
+            console.log('error')
+        }
+        console.error('Error al obtener las ofertas del usuario:', error);
+        throw error;
+    }
+};
+
+
+export const eliminarCategoria = async (idCategoria) => {
+    try {
+      const response = await axiosInstance.delete(`/categorias/delete/${idCategoria}`);
+      Swal.fire({
+        icon: "success",
+        title: "¡Eliminado!",
+        text: "La categoría ha sido eliminada correctamente.",
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error al eliminar la categoría:", error);
+  
+      if (error.response && error.response.status === 403) {
+        Swal.fire({
+          icon: "error",
+          title: "Acceso denegado",
+          text: "No tienes permiso para eliminar esta categoría.",
+        });
+      } else if (error.response && error.response.status === 404) {
+        Swal.fire({
+          icon: "error",
+          title: "Categoría no encontrada",
+          text: "La categoría que intentas eliminar no existe.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Ocurrió un error al eliminar la categoría. Por favor, intenta de nuevo.",
+        });
+      }
+  
+      throw error;
+    }
+  };
+
 
 
 

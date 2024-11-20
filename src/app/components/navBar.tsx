@@ -30,6 +30,14 @@ export const NavBar = () => {
             >
               Categorías
             </Link>
+
+
+            <Link href="/ofertas/mis" legacyBehavior>
+              <a className="text-gray-700 hover:text-blue-600">Mis Ofertas</a>
+            </Link>
+
+
+
             <Link
               href="/usuarios"
               className="text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium"
