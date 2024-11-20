@@ -23,7 +23,7 @@ export default function SolicitudesPage() {
     const [page, setPage] = useState(1);
     const [totalSolicitudes, setTotalSolicitudes] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [filterType, setFilterType] = useState("recibidas"); // Recibidas por defecto
+    const [filterType, setFilterType] = useState("recibidas"); 
     const [estadoFilter, setEstadoFilter] = useState("activo");
 
     const limit = 5;
@@ -94,8 +94,6 @@ export default function SolicitudesPage() {
             console.log("Datos a actualizar", solicitud);
             if (solicitud) {
                 const formData = new FormData();
-
-                // Adjuntar el JSON como solicitud
                 formData.append(
                     "solicitud",
                     new Blob([JSON.stringify({ ...solicitud, estado: nuevoEstado })], {
@@ -103,7 +101,6 @@ export default function SolicitudesPage() {
                     })
                 );
 
-                // Adjuntar imágenes como archivos Blob
                 solicitud.imagenes.forEach((imagen, index) => {
                     const base64String = imagen.startsWith("data:image/")
                         ? imagen.split(",")[1]
@@ -122,7 +119,7 @@ export default function SolicitudesPage() {
                 console.log("FormData antes de enviar:", Array.from(formData.entries()));
 
                 // Realizar la solicitud
-                const res = await fetch(`http://localhost:8080/solicitudes/edit/${idSolicitud}`, {
+                const res = await fetch(`http://3.137.192.224:8080/solicitudes/edit/${idSolicitud}`, {
                     method: "PUT",
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`,
