@@ -2,7 +2,7 @@
 
 // import { useState, useEffect } from "react";
 // import Swal from "sweetalert2";
-// import { obtenerOfertasPorUsuario } from "@/app/services/ofertasService";
+// import { obtenerOfertasPorUsuario, eliminar } from "@/app/services/ofertasService";
 
 // interface Oferta {
 //   idOferta: number;
@@ -47,6 +47,41 @@
 //       setLoading(false);
 //     }
 //   };
+
+//   const eliminarOferta = async (idOferta: number) => {
+//     const confirm = await Swal.fire({
+//       title: "¿Estás seguro?",
+//       text: "Una vez eliminada, esta oferta no se podrá recuperar.",
+//       icon: "warning",
+//       showCancelButton: true,
+//       confirmButtonColor: "#d33",
+//       cancelButtonColor: "#3085d6",
+//       confirmButtonText: "Sí, eliminar",
+//       cancelButtonText: "Cancelar",
+//     });
+
+//     if (!confirm.isConfirmed) return;
+
+//     try {
+//       setLoading(true);
+//       const response = await eliminar(idOferta);
+//       if (response) {
+//         Swal.fire("Eliminado", "La oferta ha sido eliminada con éxito.", "success");
+//         // Filtra la oferta eliminada del estado
+//         setOfertas((prevOfertas) => prevOfertas.filter((oferta) => oferta.idOferta !== idOferta));
+//       }
+//     } catch (error) {
+//       console.error("Error al eliminar la oferta:", error);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: "Hubo un problema al eliminar la oferta. Inténtalo nuevamente.",
+//       });
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
 //   useEffect(() => {
 //     fetchMisOfertas();
 //   }, []);
@@ -90,7 +125,12 @@
 //                     <h2 className="text-xl font-bold text-gray-800">{oferta.titulo}</h2>
 //                     <p className="text-gray-600">{oferta.descripcion}</p>
 //                     <div className="flex justify-between items-center mt-4">
-
+//                       <button
+//                         onClick={() => eliminarOferta(oferta.idOferta)}
+//                         className="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+//                       >
+//                         Eliminar
+//                       </button>
 //                     </div>
 //                   </div>
 //                 </div>
@@ -106,12 +146,12 @@
 //     </div>
 //   );
 // }
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { obtenerOfertasPorUsuario, eliminar } from "@/app/services/ofertasService";
+import { useRouter } from "next/navigation";
 
 interface Oferta {
   idOferta: number;
@@ -127,6 +167,7 @@ interface Oferta {
 export default function MisOfertasPage() {
   const [ofertas, setOfertas] = useState<Oferta[]>([]);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   const fetchMisOfertas = async () => {
     const idUsuario = sessionStorage.getItem("idUsuario");
@@ -176,7 +217,6 @@ export default function MisOfertasPage() {
       const response = await eliminar(idOferta);
       if (response) {
         Swal.fire("Eliminado", "La oferta ha sido eliminada con éxito.", "success");
-        // Filtra la oferta eliminada del estado
         setOfertas((prevOfertas) => prevOfertas.filter((oferta) => oferta.idOferta !== idOferta));
       }
     } catch (error) {
@@ -239,6 +279,12 @@ export default function MisOfertasPage() {
                         className="px-4 py-2 text-sm text-white bg-red-600 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                       >
                         Eliminar
+                      </button>
+                      <button
+                        onClick={() => router.push(`/ofertas/edit?id=${oferta.idOferta}`)}
+                        className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                      >
+                        Editar
                       </button>
                     </div>
                   </div>
