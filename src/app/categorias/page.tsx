@@ -1,24 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { obtenerTodasCategorias, eliminarCategoria } from '../services/categoriaService';
+import { obtenerTodasCategorias, eliminarCategoria, crearCategoria, actualizarCategoria } from '../services/categoriaService';
 import Swal from 'sweetalert2';
-import {
-  Boxes,
-  Laptop,
-  Smartphone,
-  Home,
-  Car,
-  Book,
-  Music,
-  ShoppingBag,
-  Utensils,
-  Shirt,
-  Plus,
-  Pencil,
-  Trash2
-} from 'lucide-react';
+import { Boxes, Laptop, Smartphone, Home, Car, Book, Music, ShoppingBag, Utensils, Shirt, Plus, Pencil, Trash2 } from 'lucide-react';
 
 interface Categoria {
   id: number;
@@ -42,40 +27,144 @@ export default function CategoriasPage() {
   const [page, setPage] = useState(1);
   const [totalCategorias, setTotalCategorias] = useState(0);
   const [loading, setLoading] = useState(true);
-  const limit = 6;
+  const limit = 9;
 
-  useEffect(() => {
-    const fetchCategorias = async () => {
-      setLoading(true);
-      try {
-        const response = await obtenerTodasCategorias(page, limit);
-        setCategorias(response.content);
-        setTotalCategorias(response.totalElements);
-      } catch (error) {
-        console.log('Error al cargar las categorías: ', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'No se pudieron cargar las categorías',
-          confirmButtonColor: '#3B82F6'
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchCategorias();
-  }, [page]);
-
-  const totalPages = Math.ceil(totalCategorias / limit);
-
-  const handleNextPage = () => {
-    if (page < totalPages) {
-      setPage(prevPage => prevPage + 1);
+  const fetchCategorias = async () => {
+    setLoading(true);
+    try {
+      const response = await obtenerTodasCategorias(page, limit);
+      setCategorias(response.content);
+      setTotalCategorias(response.totalElements);
+    } catch (error) {
+      console.log('Error al cargar las categorías: ', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No se pudieron cargar las categorías',
+        confirmButtonColor: '#3B82F6'
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handlePreviousPage = () => setPage(prevPage => Math.max(prevPage - 1, 1));
+  useEffect(() => {
+    fetchCategorias();
+  }, [page]);
+
+  const handleCrearCategoria = async () => {
+    const { value: nombre } = await Swal.fire({
+      title: 'Nueva Categoría',
+      input: 'text',
+      inputLabel: 'Nombre de la categoría',
+      inputPlaceholder: 'Ingrese el nombre de la categoría',
+      showCancelButton: true,
+      confirmButtonText: 'Crear',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3B82F6',
+      cancelButtonColor: '#EF4444',
+      background: '#F3F4F6',
+      customClass: {
+        title: '!text-2xl !font-bold !text-gray-800',
+        input: '!rounded-lg !border-gray-300 !shadow-sm focus:!border-blue-500 focus:!ring-blue-500',
+        confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+        cancelButton: '!bg-red-600 !text-white hover:!bg-red-700 !rounded-lg !px-5 !py-2.5',
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Debe ingresar un nombre para la categoría';
+        }
+        return null;
+      }
+    });
+
+    if (nombre) {
+      try {
+        await crearCategoria({ nombre });
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Categoría creada exitosamente',
+          confirmButtonColor: '#3B82F6',
+          background: '#F3F4F6',
+          customClass: {
+            title: '!text-2xl !font-bold !text-gray-800',
+            confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+          }
+        });
+        fetchCategorias();
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo crear la categoría',
+          confirmButtonColor: '#3B82F6',
+          background: '#F3F4F6',
+          customClass: {
+            title: '!text-2xl !font-bold !text-gray-800',
+            confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+          }
+        });
+      }
+    }
+  };
+
+  const handleEditarCategoria = async (categoria: Categoria) => {
+    const { value: nombre } = await Swal.fire({
+      title: 'Editar Categoría',
+      input: 'text',
+      inputLabel: 'Nombre de la categoría',
+      inputValue: categoria.nombre,
+      showCancelButton: true,
+      confirmButtonText: 'Guardar',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#3B82F6',
+      cancelButtonColor: '#EF4444',
+      background: '#F3F4F6',
+      customClass: {
+        title: '!text-2xl !font-bold !text-gray-800',
+        input: '!rounded-lg !border-gray-300 !shadow-sm focus:!border-blue-500 focus:!ring-blue-500',
+        confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+        cancelButton: '!bg-red-600 !text-white hover:!bg-red-700 !rounded-lg !px-5 !py-2.5',
+      },
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Debe ingresar un nombre para la categoría';
+        }
+        return null;
+      }
+    });
+
+    if (nombre) {
+      try {
+        await actualizarCategoria({ id: categoria.id, nombre });
+        Swal.fire({
+          icon: 'success',
+          title: '¡Éxito!',
+          text: 'Categoría actualizada exitosamente',
+          confirmButtonColor: '#3B82F6',
+          background: '#F3F4F6',
+          customClass: {
+            title: '!text-2xl !font-bold !text-gray-800',
+            confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+          }
+        });
+        fetchCategorias();
+      } catch (error) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'No se pudo actualizar la categoría',
+          confirmButtonColor: '#3B82F6',
+          background: '#F3F4F6',
+          customClass: {
+            title: '!text-2xl !font-bold !text-gray-800',
+            confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+          }
+        });
+      }
+    }
+  };
 
   const handleEliminarCategoria = async (categoria: Categoria) => {
     const result = await Swal.fire({
@@ -86,7 +175,13 @@ export default function CategoriasPage() {
       confirmButtonColor: '#3B82F6',
       cancelButtonColor: '#EF4444',
       confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar'
+      cancelButtonText: 'Cancelar',
+      background: '#F3F4F6',
+      customClass: {
+        title: '!text-2xl !font-bold !text-gray-800',
+        confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+        cancelButton: '!bg-red-600 !text-white hover:!bg-red-700 !rounded-lg !px-5 !py-2.5',
+      }
     });
 
     if (result.isConfirmed) {
@@ -96,23 +191,38 @@ export default function CategoriasPage() {
           title: '¡Eliminada!',
           text: 'La categoría ha sido eliminada exitosamente.',
           icon: 'success',
-          confirmButtonColor: '#3B82F6'
+          confirmButtonColor: '#3B82F6',
+          background: '#F3F4F6',
+          customClass: {
+            title: '!text-2xl !font-bold !text-gray-800',
+            confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+          }
         });
-        setCategorias(prevCategorias => prevCategorias.filter(c => c.id !== categoria.id));
-        if (categorias.length === 1 && page > 1) {
-          setPage(prevPage => prevPage - 1);
-        }
+        fetchCategorias();
       } catch (error) {
         console.log('Error al eliminar la categoría:', error);
         Swal.fire({
           title: 'Error',
           text: 'Hubo un problema al eliminar la categoría.',
           icon: 'error',
-          confirmButtonColor: '#3B82F6'
+          confirmButtonColor: '#3B82F6',
+          background: '#F3F4F6',
+          customClass: {
+            title: '!text-2xl !font-bold !text-gray-800',
+            confirmButton: '!bg-blue-600 !text-white hover:!bg-blue-700 !rounded-lg !px-5 !py-2.5',
+          }
         });
       }
     }
   };
+
+  const totalPages = Math.ceil(totalCategorias / limit);
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(prevPage => prevPage + 1);
+    }
+  };
+  const handlePreviousPage = () => setPage(prevPage => Math.max(prevPage - 1, 1));
 
   const getIconForCategory = (categoryName: string) => {
     const IconComponent = categoryIcons[categoryName] || categoryIcons.default;
@@ -120,18 +230,19 @@ export default function CategoriasPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 mb-4 sm:mb-0">
             Categorías
           </h1>
-          <Link href="/categorias/crear-categoria">
-            <button className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all duration-200 hover:scale-105">
-              <Plus className="h-5 w-5 mr-2" />
-              Nueva Categoría
-            </button>
-          </Link>
+          <button 
+            onClick={handleCrearCategoria}
+            className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-full shadow-sm text-white bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transform transition-all duration-200 hover:scale-105"
+          >
+            <Plus className="h-5 w-5 mr-2" />
+            Nueva Categoría
+          </button>
         </div>
 
         {loading ? (
@@ -147,7 +258,7 @@ export default function CategoriasPage() {
               >
                 <div className="p-6">
                   <div className="flex items-center space-x-4 mb-4">
-                    <div className="p-3 bg-blue-100 rounded-full">
+                    <div className="p-3 bg-gradient-to-br from-blue-400 to-indigo-500 rounded-full text-white">
                       {getIconForCategory(categoria.nombre)}
                     </div>
                     <h2 className="text-xl font-semibold text-gray-900">
@@ -155,12 +266,13 @@ export default function CategoriasPage() {
                     </h2>
                   </div>
                   <div className="flex justify-end space-x-3">
-                    <Link href={`/categorias/editar-categoria/${categoria.id}`}>
-                      <button className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200">
-                        <Pencil className="h-4 w-4 mr-2" />
-                        Editar
-                      </button>
-                    </Link>
+                    <button
+                      onClick={() => handleEditarCategoria(categoria)}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                    >
+                      <Pencil className="h-4 w-4 mr-2" />
+                      Editar
+                    </button>
                     <button
                       onClick={() => handleEliminarCategoria(categoria)}
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors duration-200"
@@ -174,7 +286,7 @@ export default function CategoriasPage() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-12">
+          <div className="text-center py-12 bg-white rounded-xl shadow-lg">
             <Boxes className="mx-auto h-12 w-12 text-gray-400" />
             <h3 className="mt-2 text-sm font-medium text-gray-900">No hay categorías</h3>
             <p className="mt-1 text-sm text-gray-500">Comienza creando una nueva categoría.</p>
@@ -190,7 +302,8 @@ export default function CategoriasPage() {
             >
               Anterior
             </button>
-            <span className="text-sm text-gray-700">
+            <span className="text-sm text-gray-700 bg-white px-3 py-2 rounded-m
+d shadow">
               Página {page} de {totalPages}
             </span>
             <button
@@ -206,3 +319,4 @@ export default function CategoriasPage() {
     </div>
   );
 }
+
