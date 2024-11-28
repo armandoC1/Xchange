@@ -25,7 +25,7 @@ export default function Login() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     try {
-      const res = await fetch('http://3.137.192.224:8080/usuarios/login', {
+      const res = await fetch('http://api.xchangesv.es:8080/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

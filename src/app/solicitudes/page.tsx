@@ -23,7 +23,7 @@ export default function SolicitudesPage() {
     const [page, setPage] = useState(1);
     const [totalSolicitudes, setTotalSolicitudes] = useState(0);
     const [loading, setLoading] = useState(true);
-    const [filterType, setFilterType] = useState("recibidas"); 
+    const [filterType, setFilterType] = useState("recibidas");
     const [estadoFilter, setEstadoFilter] = useState("activo");
 
     const limit = 5;
@@ -119,7 +119,7 @@ export default function SolicitudesPage() {
                 console.log("FormData antes de enviar:", Array.from(formData.entries()));
 
                 // Realizar la solicitud
-                const res = await fetch(`http://3.137.192.224:8080/solicitudes/edit/${idSolicitud}`, {
+                const res = await fetch(`http://api.xchangesv.es:8080/solicitudes/edit/${idSolicitud}`, {
                     method: "PUT",
                     headers: {
                         Authorization: `Bearer ${sessionStorage.getItem("token")}`,

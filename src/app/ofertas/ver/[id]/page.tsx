@@ -199,11 +199,10 @@ export default function OfertaDetallesPage() {
                                                 {oferta.imagenes.map((_, index) => (
                                                     <div
                                                         key={index}
-                                                        className={`w-2.5 h-2.5 rounded-full transition-all ${
-                                                            index === currentImageIndex
+                                                        className={`w-2.5 h-2.5 rounded-full transition-all ${index === currentImageIndex
                                                                 ? 'bg-white scale-125'
                                                                 : 'bg-white/50 hover:bg-white/75'
-                                                        }`}
+                                                            }`}
                                                     />
                                                 ))}
                                             </div>
@@ -290,11 +289,10 @@ export default function OfertaDetallesPage() {
                                     className={`flex ${message.idRemitente === userId ? 'justify-end' : 'justify-start'}`}
                                 >
                                     <div
-                                        className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                                            message.idRemitente === userId
+                                        className={`max-w-[70%] rounded-lg px-4 py-2 ${message.idRemitente === userId
                                                 ? 'bg-blue-500 text-white'
                                                 : 'bg-gray-200 text-gray-900'
-                                        }`}
+                                            }`}
                                     >
                                         <p>{message.contenidoMensaje}</p>
                                         <p className="text-xs mt-1 opacity-75">{formatDate(message.fechaEnvio)}</p>

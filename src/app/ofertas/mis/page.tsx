@@ -281,7 +281,7 @@ export default function MisOfertasPage() {
                         Eliminar
                       </button>
                       <button
-                        onClick={() => router.push(`/ofertas/edit?id=${oferta.idOferta}`)}
+                        onClick={() => router.push(`/ofertas/edit/${oferta.idOferta}`)}
                         className="px-4 py-2 text-sm text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                       >
                         Editar
