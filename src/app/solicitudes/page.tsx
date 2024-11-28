@@ -19,8 +19,7 @@ interface Solicitud {
 //sessionStorage 
 
 export default function SolicitudesPage() {
-    const initialUserId = parseInt(sessionStorage.getItem("idUsuario") || "0");
-    const [userId] = useState<number>(initialUserId);
+    const [userId, setUserId] = useState<number>(0); // Inicialmente, valor 0
     const [solicitudes, setSolicitudes] = useState<Solicitud[]>([]);
     const [page, setPage] = useState(1);
     const [totalSolicitudes, setTotalSolicitudes] = useState(0);
@@ -30,6 +29,13 @@ export default function SolicitudesPage() {
 
     const limit = 5;
 
+    useEffect(() => {
+        
+        const storedUserId = sessionStorage.getItem("idUsuario");
+        if (storedUserId) {
+            setUserId(parseInt(storedUserId, 10));
+        }
+    }, []);
     
     useEffect(() => {
         const fetchSolicitudes = async () => {
