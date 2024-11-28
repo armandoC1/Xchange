@@ -1,6 +1,5 @@
 import axiosInstance from './axiosInstance';
 
-//funciona
 export const obtenerUsuarioPorId = async (idUsuario) => {
     try {
         const response = await axiosInstance.get(`/usuarios/findById/${idUsuario}`);

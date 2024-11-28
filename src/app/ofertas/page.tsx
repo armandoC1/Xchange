@@ -11,6 +11,7 @@ interface Oferta {
   idOferta: number
   titulo: string
   descripcion: string
+  estado: string
   condicion: string
   ubicacion: string
   imagenes: string[]
@@ -63,7 +64,8 @@ export default function IntercambiosPage() {
             const filteredOfertas = response.filter(
               (oferta: Oferta) =>
                 oferta.idUsuario !== userId &&
-                (!selectedCategory || oferta.idCategoria === selectedCategory)
+                (!selectedCategory || oferta.idCategoria === selectedCategory) &&
+                oferta.estado === 'activa'
             )
             setOfertas(filteredOfertas)
             setTotalOfertas(filteredOfertas.length)
@@ -84,7 +86,8 @@ export default function IntercambiosPage() {
             const filteredOfertas = response.content.filter(
               (oferta: Oferta) =>
                 oferta.idUsuario !== userId &&
-                (!selectedCategory || oferta.idCategoria === selectedCategory)
+                (!selectedCategory || oferta.idCategoria === selectedCategory) &&
+                oferta.estado === 'activa'
             )
             setOfertas(filteredOfertas)
             setTotalOfertas(response.totalElements)

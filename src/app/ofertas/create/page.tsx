@@ -38,7 +38,7 @@ export default function CrearOferta() {
     const fetchCategorias = async () => {
       try {
         const token = sessionStorage.getItem('token');
-        const res = await fetch('http://api.xchangesv.es:8080/categorias/list', { // aqui hay uno
+        const res = await fetch('https://api.xchangesv.es:8080/categorias/list', { // aqui hay uno
           method: 'GET',
           headers: {
             Authorization: `Bearer ${token}`,
@@ -231,7 +231,7 @@ export default function CrearOferta() {
     });
 
     try {
-      const res = await fetch('http://api.xchangesv.es:8080/ofertas/save', {
+      const res = await fetch('https://api.xchangesv.es:8080/ofertas/save', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

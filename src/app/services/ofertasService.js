@@ -41,32 +41,11 @@ export const obtenerPorId = async (idOferta) => {
     }
 };
 
-//modificado para estar similar al de guardar oferta
-// export const editarOferta = async (ofertaData, idOferta) => {
-//     try {
-//         const response = await axiosInstance.put(`/edit/${idOferta}`, {
-//             oferta: {
-//                 titulo: ofertaData.titulo,
-//                 descripcion: ofertaData.descripcion,
-//                 condicion: ofertaData.condicion,
-//                 ubicacion: ofertaData.ubicacion,
-//                 imagenes: ofertaData.imagenes, //estar pendiente que podria cambiar
-//                 idCategoria: ofertaData.idCategoria,
-//                 idUsuario: ofertaData.idUsuario
-//             }
-//         });
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error al registrar la oferta', error);
-//         throw error;
-//     }
-// }
 export const editarOferta = async (ofertaData, idOferta) => {
     try {
       const token = sessionStorage.getItem("token");
       const formData = new FormData();
   
-      // Crear los datos principales de la oferta
       const oferta = {
         titulo: ofertaData.titulo,
         descripcion: ofertaData.descripcion,
@@ -81,16 +60,14 @@ export const editarOferta = async (ofertaData, idOferta) => {
         new Blob([JSON.stringify(oferta)], { type: "application/json" })
       );
   
-      // Agregar imágenes al FormData con validación
       ofertaData.imagenes.forEach((base64Image, index) => {
-        // Validar que la cadena tenga el formato correcto
         const base64Parts = base64Image.split(",");
         if (base64Parts.length !== 2) {
           console.error("Formato de imagen Base64 inválido:", base64Image);
           throw new Error("Una de las imágenes tiene un formato inválido.");
         }
   
-        const byteString = atob(base64Parts[1]); // Obtener la parte binaria
+        const byteString = atob(base64Parts[1]); 
         const mimeMatch = base64Parts[0].match(/:(.*?);/);
   
         if (!mimeMatch) {
@@ -98,7 +75,7 @@ export const editarOferta = async (ofertaData, idOferta) => {
           throw new Error("Una de las imágenes tiene un tipo MIME inválido.");
         }
   
-        const mimeType = mimeMatch[1]; // Extraer tipo MIME
+        const mimeType = mimeMatch[1]; 
         const ab = new ArrayBuffer(byteString.length);
         const ia = new Uint8Array(ab);
   
@@ -110,7 +87,6 @@ export const editarOferta = async (ofertaData, idOferta) => {
         formData.append("imagenes", blob, `imagen${index + 1}.${mimeType.split("/")[1]}`);
       });
   
-      // Enviar solicitud al backend
       const response = await axiosInstance.put(`/ofertas/edit/${idOferta}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,

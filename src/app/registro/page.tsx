@@ -67,19 +67,18 @@ export default function Registro() {
     }
 
     try {
-      const res = await fetch('http://api.xchangesv.es:8080/usuarios/registro', {
+      const res = await fetch('https://api.xchangesv.es:8080/usuarios/registro', {
         method: 'POST',
         body: formDataToSend,
       });
 
       if (res.ok) {
-        // Mostrar alerta de "Redirigiendo..."
         Swal.fire({
           title: 'Registro exitoso',
           text: 'Redirigiendo al inicio de sesión...',
           icon: 'success',
           showConfirmButton: false,
-          timer: 2000, // Duración de la alerta en milisegundos
+          timer: 2000, 
           willClose: () => {
             router.push('/login');
           },

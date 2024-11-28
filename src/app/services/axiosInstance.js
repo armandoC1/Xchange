@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://api.xchangesv.es:8080',
+  baseURL: 'https://api.xchangesv.es:8080',
   headers: {
     'Content-Type': 'application/json',
   },
