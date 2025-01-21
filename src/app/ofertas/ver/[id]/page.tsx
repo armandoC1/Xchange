@@ -39,7 +39,7 @@ export default function OfertaDetallesPage() {
     const [newMessage, setNewMessage] = useState('');
     const [userId, setUserId] = useState<number | null>(null);
 
-    const messagesEndRef = useRef<HTMLDivElement>(null); // Referencia para el scroll automático
+    const messagesEndRef = useRef<HTMLDivElement>(null); 
 
     useEffect(() => {
         const storedUserId = sessionStorage.getItem('idUsuario');
@@ -53,7 +53,6 @@ export default function OfertaDetallesPage() {
     }, [id]);
 
     useEffect(() => {
-        // Desplaza el scroll automáticamente al final cada vez que se actualizan los mensajes
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }

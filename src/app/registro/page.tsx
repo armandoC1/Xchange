@@ -67,7 +67,7 @@ export default function Registro() {
     }
 
     try {
-      const res = await fetch('https://api.xchangesv.es:8080/usuarios/registro', {
+      const res = await fetch('https://api.xchangesv.es/usuarios/registro', {
         method: 'POST',
         body: formDataToSend,
       });

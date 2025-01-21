@@ -35,7 +35,6 @@ export default function IntercambiosPage() {
   const limit = 5
   const [userId, setUserId] = useState<number>(0)
 
-  // Mantener los useEffect existentes sin cambios
   useEffect(() => {
     const storedId = sessionStorage.getItem('idUsuario')
     setUserId(parseInt(storedId || '0'))

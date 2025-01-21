@@ -36,7 +36,7 @@ export default function CrearSolicitud() {
                 const token = sessionStorage.getItem('token');
                 if (!token) throw new Error('Token no encontrado');
 
-                const res = await fetch('http://api.xchangesv.es:8080/categorias/list', {
+                const res = await fetch('http://api.xchangesv.es/categorias/list', {
                     method: 'GET',
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -85,7 +85,7 @@ export default function CrearSolicitud() {
                 idDestinatario,
             };
 
-            const res = await fetch('http://api.xchangesv.es:8080/mensajes/sendMenssage', {
+            const res = await fetch('http://api.xchangesv.es/mensajes/sendMenssage', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -140,7 +140,7 @@ export default function CrearSolicitud() {
         });
 
         try {
-            const res = await fetch('http://api.xchangesv.es:8080/solicitudes/save', {
+            const res = await fetch('http://api.xchangesv.es/solicitudes/save', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,

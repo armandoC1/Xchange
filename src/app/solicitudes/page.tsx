@@ -131,7 +131,7 @@ export default function SolicitudesPage() {
                 formData.append("imagenes", blob, `imagen-${index}.jpeg`);
             });
 
-            const res = await fetch(`http://api.xchangesv.es:8080/solicitudes/edit/${idSolicitud}`, {
+            const res = await fetch(`http://api.xchangesv.es/solicitudes/edit/${idSolicitud}`, {
                 method: "PUT",
                 headers: {
                     Authorization: `Bearer ${sessionStorage.getItem("token")}`,
