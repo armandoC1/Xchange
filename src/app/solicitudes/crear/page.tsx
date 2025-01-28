@@ -140,7 +140,7 @@ export default function CrearSolicitud() {
         });
 
         try {
-            const res = await fetch('http://api.xchangesv.es/solicitudes/save', {
+            const res = await fetch('https://xchange-api-production.up.railway.app/solicitudes/save', {
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${token}`,

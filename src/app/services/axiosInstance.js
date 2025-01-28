@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'https://api.xchangesv.es',
+  baseURL: 'https://xchange-api-production.up.railway.app',
   headers: {
     'Content-Type': 'application/json',
   },

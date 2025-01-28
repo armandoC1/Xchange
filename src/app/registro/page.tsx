@@ -24,7 +24,7 @@ export default function Registro() {
     contrasena: '',
     numeroTelefono: '',
     ubicacion: '',
-    idRol: 1,
+    idRol: 2,
     fotoPerfil: null,
   });
   const [previewUrl, setPreviewUrl] = useState<string>('');
@@ -67,7 +67,7 @@ export default function Registro() {
     }
 
     try {
-      const res = await fetch('https://api.xchangesv.es/usuarios/registro', {
+      const res = await fetch('https://xchange-api-production.up.railway.app/usuarios/registro', {
         method: 'POST',
         body: formDataToSend,
       });
@@ -210,7 +210,7 @@ export default function Registro() {
                 </div>
               </div>
 
-              <div className="relative">
+              {/* <div className="relative">
                 <label htmlFor="idRol" className="block text-sm font-medium text-gray-700 mb-1">
                   Rol
                 </label>
@@ -229,7 +229,7 @@ export default function Registro() {
                     <option value="2">Administrador</option>
                   </select>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
 

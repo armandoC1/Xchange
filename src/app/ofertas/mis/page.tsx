@@ -116,7 +116,7 @@ export default function MisOfertasPage() {
           });
         }
 
-        const res = await fetch(`https://api.xchangesv.es/ofertas/edit/${idOferta}`, {
+        const res = await fetch(`https://xchange-api-production.up.railway.app/ofertas/edit/${idOferta}`, {
           method: "PUT",
           headers: {
             Authorization: `Bearer ${sessionStorage.getItem("token")}`,
