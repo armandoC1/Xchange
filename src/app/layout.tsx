@@ -16,7 +16,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "TruequeSV",
+  title: "YourChangeSV",
   description: "Web dedicada a facilitar los intercambios entre usuarios ",
 };
 
